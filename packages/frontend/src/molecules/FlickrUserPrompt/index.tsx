@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { LoadingIcon } from "../../atoms";
 import { Button, Col, Form, FormGroup, Input, Row } from "reactstrap";
 import { useMutation } from "react-query";
-import { getAndSaveFlickrUserId } from "../../infra/photos";
+import { getAndSaveFlickrUserId } from "../../infra/users";
 
 export const FlickrUserPrompt: React.FC = () => {
 	const { getFlickrUserName, setFlickrUser } = useAuth();
