@@ -26,14 +26,14 @@ import googleLogo from "../assets/img/icons/common/google.svg";
 import { showErrorMessage } from "../util/errorType";
 import { setToken } from "../infra/tokenManager";
 import { useMutation } from "react-query";
-import { saveOrUpdateUser } from "../infra/users";
+import { callApiSaveOrUpdateUser } from "../infra/users";
 
 export const WelcomePage: React.FC = () => {
 	const { setFirebaseUser, setFlickrUser } = useAuth();
 	const navigate = useNavigate();
 
-	const { mutate } = useMutation(
-		(user: User) => saveOrUpdateUser(user), 
+	const { mutate: saveOrUpdateUser } = useMutation(
+		(user: User) => callApiSaveOrUpdateUser(user), 
 		{ onSuccess: (flickrUserName: string) => setFlickrUser(flickrUserName) }
 	);
 
@@ -43,7 +43,7 @@ export const WelcomePage: React.FC = () => {
 			const result = await signInWithPopup(auth, provider);
 			console.log("User Info:", result.user);
 
-			mutate(result.user);
+			saveOrUpdateUser(result.user);
 			setToken(await result.user.getIdToken());
 			navigate("/user");
 		} catch (error: unknown) {

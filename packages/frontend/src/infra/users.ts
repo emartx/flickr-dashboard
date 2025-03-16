@@ -7,7 +7,7 @@ import { showErrorMessage } from "../util/errorType";
 
 const db = getFirestore();
 
-export const getAndSaveFlickrUserId = async (userName: string | undefined) => {
+export const callApiGetAndSaveFlickrUserId = async (userName: string | undefined) => {
   if (!userName) return "";
 
   const token = getToken();
@@ -34,7 +34,7 @@ export const getUserInfo = async (firebaseUserId: string) => {
   return null;
 };
 
-export const saveOrUpdateUser = async (user: User) => {
+export const callApiSaveOrUpdateUser = async (user: User) => {
   if (!user) return;
 
   const userRef = doc(db, "users", user.uid);
