@@ -1,7 +1,20 @@
 import axios from "axios";
-import { getFirestore, setDoc, doc } from "firebase/firestore";
-import { PhotoFlickr, PhotoPayload } from "../types/photos";
+import { getFirestore, setDoc, doc, collection, getDocs } from "firebase/firestore";
+import { Photo, PhotoFlickr, PhotoPayload } from "../types/photos";
 import { getToken } from "./tokenManager";
+
+export const fetchPhotos = async (userId: string) => {
+  if (!userId) return [];
+  try {
+    const db = getFirestore();
+    const photosRef = collection(db, "users", userId, "photos");
+    const photoDocs = await getDocs(photosRef);
+    return photoDocs.docs.map(photoDoc => ({ ...photoDoc.data(), id: photoDoc.id } as Photo));
+  } catch (error: unknown) {
+    console.error("Error Fetching Photos: ", (error as Error).message);
+    return [] as Photo[];
+  }
+};
 
 export const getRecentPhotos = async () => {
   try {
