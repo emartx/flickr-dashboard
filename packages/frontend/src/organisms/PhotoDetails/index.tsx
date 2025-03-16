@@ -8,12 +8,13 @@ import notFoundImage from "../../assets/img/not_found.jpg";
 import { commaSeparateNumber } from "../../util/numbers";
 import { useQuery } from "react-query";
 import { getPhoto } from "../../infra/photos";
+import { ApiInstance } from "../../types/apis";
 
 export const PhotoDetails: React.FC = () => {
 	const { firebaseUser } = useAuth();
 	const { id } = useParams();
 
-	const { data: photo, isLoading } = useQuery("photo", () => getPhoto(id, firebaseUser.uid));
+	const { data: photo, isLoading } = useQuery(ApiInstance.GetPhoto, () => getPhoto(id, firebaseUser.uid));
 
 	return (
 		<Card className="shadow">
