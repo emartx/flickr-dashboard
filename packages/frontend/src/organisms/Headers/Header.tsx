@@ -16,11 +16,13 @@
 
 */
 
+import { ReactElement, useState } from "react";
+import { useQuery } from "react-query";
 import { Card, CardBody, CardTitle, Container, Row, Col } from "reactstrap";
 import { useAuth } from "../../context/AuthContext";
-import { doc, getDoc, getFirestore } from "firebase/firestore";
-import { ReactElement, useEffect, useState } from "react";
 import { commaSeparateNumber } from "../../util/numbers";
+import { getUserInfo } from "../../infra/users";
+import { UserType } from "../../types/user";
 
 type Props = {
   displayStats?: boolean;
@@ -29,30 +31,20 @@ type Props = {
 
 const Header: React.FC<Props> = ({ displayStats = false, actions = <></> }) => {
 	const { firebaseUser } = useAuth();
-	const db = getFirestore();
+	
 	const [photosCount, setPhotosCount] = useState(0);
 	const [userViews, setUserViews] = useState(0);
 	const [userFaves, setUserFaves] = useState(0);
 	const [userComments, setUserComments] = useState(0);
 
-	const getUserInfo = async () => {
-		if (!firebaseUser) return;
-
-		const userRef = doc(db, "users", firebaseUser.uid);
-		const userDoc = await getDoc(userRef);
-
-		if (userDoc.exists()) {
-			const { photosCount, totalViews, totalFaves, totalComments } = userDoc.data();
-			setPhotosCount(photosCount);
-			setUserViews(totalViews);
-			setUserFaves(totalFaves);
-			setUserComments(totalComments);
+	const { isLoading } = useQuery("getUserInfo", () => getUserInfo(firebaseUser.uid), { onSuccess: (userInfo: UserType) => {
+		if (userInfo) {
+			setPhotosCount(userInfo.photosCount);
+			setUserViews(userInfo.totalViews);
+			setUserFaves(userInfo.totalFaves);
+			setUserComments(userInfo.totalComments);
 		}
-	};
-
-	useEffect(() => {
-    getUserInfo();
-  }, []);
+	}});
 
 	return (
 		<>
@@ -73,7 +65,8 @@ const Header: React.FC<Props> = ({ displayStats = false, actions = <></> }) => {
 														Photos
 													</CardTitle>
 													<span className="h2 font-weight-bold mb-0">
-														{commaSeparateNumber(photosCount)}
+														{ isLoading && "?" }
+														{ !isLoading && commaSeparateNumber(photosCount) }
 													</span>
 												</div>
 												<Col className="col-auto">
@@ -103,7 +96,8 @@ const Header: React.FC<Props> = ({ displayStats = false, actions = <></> }) => {
 														Views
 													</CardTitle>
 													<span className="h2 font-weight-bold mb-0">
-														{commaSeparateNumber(userViews)}
+														{ isLoading && "?" }
+														{ !isLoading && commaSeparateNumber(userViews) }
 													</span>
 												</div>
 												<Col className="col-auto">
@@ -133,7 +127,8 @@ const Header: React.FC<Props> = ({ displayStats = false, actions = <></> }) => {
 														Faves
 													</CardTitle>
 													<span className="h2 font-weight-bold mb-0">
-														{commaSeparateNumber(userFaves)}
+														{ isLoading && "?" }
+														{ !isLoading && commaSeparateNumber(userFaves) }
 													</span>
 												</div>
 												<Col className="col-auto">
@@ -163,7 +158,8 @@ const Header: React.FC<Props> = ({ displayStats = false, actions = <></> }) => {
 														Comments
 													</CardTitle>
 													<span className="h2 font-weight-bold mb-0">
-														{commaSeparateNumber(userComments)}
+														{ isLoading && "?" }
+														{ !isLoading && commaSeparateNumber(userComments) }
 													</span>
 												</div>
 												<Col className="col-auto">
