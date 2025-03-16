@@ -1,6 +1,8 @@
 import { doc, getDoc, getFirestore } from "firebase/firestore";
 import { getToken } from "./tokenManager";
 import axios from "axios";
+import { UserType } from "../types/user";
+import { showErrorMessage } from "../util/errorType";
 
 const db = getFirestore();
 
@@ -24,7 +26,9 @@ export const getUserInfo = async (firebaseUserId: string) => {
   const userDoc = await getDoc(userRef);
 
   if (userDoc.exists()) {
-    return userDoc.data();
+    return userDoc.data() as UserType;
+  } else {
+    showErrorMessage("Error in saving user info in DB");
   }
   return null;
 };

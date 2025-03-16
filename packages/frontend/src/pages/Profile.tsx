@@ -31,36 +31,16 @@ import {
 } from "reactstrap";
 // core components
 import UserHeader from "../organisms/Headers/UserHeader";
-import { useEffect, useState } from "react";
-import { User } from "firebase/auth";
-import { doc, getDoc, getFirestore } from "firebase/firestore";
-import { showErrorMessage } from "../util/errorType.js";
 import { useAuth } from "../context/AuthContext.js";
-import { UserType } from "../types/user";
 import { StatsSimpleBox } from "../atoms";
 import { commaSeparateNumber } from "../util/numbers";
+import { useQuery } from "react-query";
+import { getUserInfo } from "../infra/users.js";
 
 export const Profile: React.FC = () => {
-	const db = getFirestore();
 	const { firebaseUser } = useAuth();
-  const [user, setUser] = useState<UserType | null>(null);
 
-	const getUserInfo = async (user: User) => {
-		if (!user) return;
-
-		const userRef = doc(db, "users", user.uid);
-		const userDoc = await getDoc(userRef);
-
-		if (userDoc.exists()) {
-			setUser(userDoc.data() as UserType);
-		} else {
-			showErrorMessage("Error in saving user info in DB");
-		}
-	};
-
-	useEffect(() => {
-		getUserInfo(firebaseUser);
-	}, [firebaseUser]);
+	const { data: user, isLoading } = useQuery("getUserInfo", () => getUserInfo(firebaseUser.uid));
 
 	return (
 		<>
@@ -102,51 +82,57 @@ export const Profile: React.FC = () => {
 								</div>
 							</CardHeader>
 							<CardBody className="pt-0 pt-md-4">
-								<div className="text-center">
-									<h3>
-										{user?.name}
-										<span className="font-weight-light">, 39</span>
-									</h3>
-									<div className="h5 font-weight-300">
-										<i className="ni location_pin mr-2" />
-										Berlin, Germany
-									</div>
-									<div className="h5 mt-4">
-										<i className="ni business_briefcase-24 mr-2" />
-										Photographer - EmArTx Co.
-									</div>
-									<div>
-										<i className="ni education_hat mr-2" />
-										University of Computer Science
-									</div>
-									<hr className="my-4" />
-									<p>
-										Ryan — the name taken by Melbourne-raised, Brooklyn-based
-										Nick Murphy — writes, performs and records all of his own
-										music.
-									</p>
-									<a href="#pablo" onClick={(e) => e.preventDefault()}>
-										Show more
-									</a>
-								</div>
+								{ isLoading && <span>Is Loading...</span> }
 
-								<Row>
-									<div className="col">
-										<div className="card-profile-stats d-flex justify-content-center mt-md-0">
-											<StatsSimpleBox title="Photos" value={commaSeparateNumber(user?.photosCount)} />
-											<StatsSimpleBox title="Views" value={commaSeparateNumber(user?.totalViews)} />
+								{ !isLoading && !!user && (
+									<>
+										<div className="text-center">
+											<h3>
+												{user?.name}
+												<span className="font-weight-light">, 39</span>
+											</h3>
+											<div className="h5 font-weight-300">
+												<i className="ni location_pin mr-2" />
+												Berlin, Germany
+											</div>
+											<div className="h5 mt-4">
+												<i className="ni business_briefcase-24 mr-2" />
+												Photographer - EmArTx Co.
+											</div>
+											<div>
+												<i className="ni education_hat mr-2" />
+												University of Computer Science
+											</div>
+											<hr className="my-4" />
+											<p>
+												Ryan — the name taken by Melbourne-raised, Brooklyn-based
+												Nick Murphy — writes, performs and records all of his own
+												music.
+											</p>
+											<a href="#pablo" onClick={(e) => e.preventDefault()}>
+												Show more
+											</a>
 										</div>
-									</div>
-								</Row>
 
-								<Row>
-									<div className="col">
-										<div className="card-profile-stats d-flex justify-content-center mt-0 md-5">
-											<StatsSimpleBox title="Faves" value={commaSeparateNumber(user?.totalFaves)} />
-											<StatsSimpleBox title="Comments" value={commaSeparateNumber(user?.totalComments)} />
-										</div>
-									</div>
-								</Row>
+										<Row>
+											<div className="col">
+												<div className="card-profile-stats d-flex justify-content-center mt-md-0">
+													<StatsSimpleBox title="Photos" value={commaSeparateNumber(user?.photosCount)} />
+													<StatsSimpleBox title="Views" value={commaSeparateNumber(user?.totalViews)} />
+												</div>
+											</div>
+										</Row>
+
+										<Row>
+											<div className="col">
+												<div className="card-profile-stats d-flex justify-content-center mt-0 md-5">
+													<StatsSimpleBox title="Faves" value={commaSeparateNumber(user?.totalFaves)} />
+													<StatsSimpleBox title="Comments" value={commaSeparateNumber(user?.totalComments)} />
+												</div>
+											</div>
+										</Row>
+									</>
+								)}
 							</CardBody>
 						</Card>
 					</Col>
