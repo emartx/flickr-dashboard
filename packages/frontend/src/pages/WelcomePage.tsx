@@ -31,6 +31,7 @@ import {
 import googleLogo from "../assets/img/icons/common/google.svg";
 import { useNavigate } from "react-router-dom";
 import { showErrorMessage } from "../util/errorType";
+import { setToken } from "../infra/tokenManager";
 
 export const WelcomePage: React.FC = () => {
 	const { setFirebaseUser, setFlickrUser } = useAuth();
@@ -44,6 +45,7 @@ export const WelcomePage: React.FC = () => {
 			console.log("User Info:", result.user);
 
 			saveOrUpdateUser(result.user);
+			setToken(await result.user.getIdToken());
 			navigate("/user");
 		} catch (error: unknown) {
 			showErrorMessage(error);

@@ -1,10 +1,11 @@
 import axios from "axios";
 import { getFirestore, setDoc, doc } from "firebase/firestore";
 import { PhotoFlickr, PhotoPayload } from "../types/photos";
+import { getToken } from "./tokenManager";
 
-export const getRecentPhotos = async (token: string) => {
+export const getRecentPhotos = async () => {
   try {
-    // const token = await firebaseUser.getIdToken();
+    const token = getToken();
     const response = await axios.get(
       "https://fetchrecentflickrphotos-ag5w5dzqxq-uc.a.run.app/",
       {
