@@ -37,7 +37,6 @@ export const WelcomePage: React.FC = () => {
 		{ onSuccess: (flickrUserName: string) => setFlickrUser(flickrUserName) }
 	);
 
-
 	const handleGoogleLogin = async () => {
 		const provider = new GoogleAuthProvider();
 		try {
