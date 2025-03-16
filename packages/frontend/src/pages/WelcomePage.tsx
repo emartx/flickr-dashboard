@@ -4,13 +4,6 @@ import {
 	signInWithPopup,
 	User,
 } from "firebase/auth";
-import {
-	doc,
-	getDoc,
-	setDoc,
-	serverTimestamp,
-	getFirestore,
-} from "firebase/firestore";
 import React, { useEffect } from "react";
 import { auth } from "../firebase";
 import { useAuth } from "../context/AuthContext";
@@ -28,15 +21,22 @@ import {
 	InputGroupText,
 	Row,
 } from "reactstrap";
-import googleLogo from "../assets/img/icons/common/google.svg";
 import { useNavigate } from "react-router-dom";
+import googleLogo from "../assets/img/icons/common/google.svg";
 import { showErrorMessage } from "../util/errorType";
 import { setToken } from "../infra/tokenManager";
+import { useMutation } from "react-query";
+import { saveOrUpdateUser } from "../infra/users";
 
 export const WelcomePage: React.FC = () => {
 	const { setFirebaseUser, setFlickrUser } = useAuth();
-	const db = getFirestore();
 	const navigate = useNavigate();
+
+	const { mutate } = useMutation(
+		(user: User) => saveOrUpdateUser(user), 
+		{ onSuccess: (flickrUserName: string) => setFlickrUser(flickrUserName) }
+	);
+
 
 	const handleGoogleLogin = async () => {
 		const provider = new GoogleAuthProvider();
@@ -44,47 +44,11 @@ export const WelcomePage: React.FC = () => {
 			const result = await signInWithPopup(auth, provider);
 			console.log("User Info:", result.user);
 
-			saveOrUpdateUser(result.user);
+			mutate(result.user);
 			setToken(await result.user.getIdToken());
 			navigate("/user");
 		} catch (error: unknown) {
 			showErrorMessage(error);
-		}
-	};
-
-	const saveOrUpdateUser = async (user: User) => {
-		if (!user) return;
-
-		const userRef = doc(db, "users", user.uid);
-		const userDoc = await getDoc(userRef);
-
-		if (userDoc.exists()) {
-			setFlickrUser(userDoc.data().flickrUserName);
-
-			await setDoc(
-				userRef,
-				{
-					lastLogin: new Date(),
-				},
-				{ merge: true }
-			);
-
-			console.log("Last Login Date updated successfully.");
-		} else {
-			const userData = {
-				uid: user.uid,
-				name: user.displayName,
-				email: user.email,
-				photoURL: user.photoURL,
-				createdAt: serverTimestamp(),
-			};
-
-			try {
-				await setDoc(userRef, userData, { merge: true });
-				console.log("User info saved successfully:", userData);
-			} catch (error) {
-				showErrorMessage(error, "Error in saving user info in DB");
-			}
 		}
 	};
 

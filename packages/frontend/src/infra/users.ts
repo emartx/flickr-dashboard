@@ -1,6 +1,7 @@
-import { doc, getDoc, getFirestore } from "firebase/firestore";
-import { getToken } from "./tokenManager";
+import { doc, getDoc, getFirestore, serverTimestamp, setDoc } from "firebase/firestore";
+import { User } from "firebase/auth";
 import axios from "axios";
+import { getToken } from "./tokenManager";
 import { UserType } from "../types/user";
 import { showErrorMessage } from "../util/errorType";
 
@@ -31,4 +32,40 @@ export const getUserInfo = async (firebaseUserId: string) => {
     showErrorMessage("Error in saving user info in DB");
   }
   return null;
+};
+
+export const saveOrUpdateUser = async (user: User) => {
+  if (!user) return;
+
+  const userRef = doc(db, "users", user.uid);
+  const userDoc = await getDoc(userRef);
+
+  if (userDoc.exists()) {
+    await setDoc(
+      userRef,
+      {
+        lastLogin: new Date(),
+      },
+      { merge: true }
+    );
+
+    console.log("Last Login Date updated successfully.");
+
+    return userDoc.data().flickrUserName;
+  } else {
+    const userData = {
+      uid: user.uid,
+      name: user.displayName,
+      email: user.email,
+      photoURL: user.photoURL,
+      createdAt: serverTimestamp(),
+    };
+
+    try {
+      await setDoc(userRef, userData, { merge: true });
+      console.log("User info saved successfully:", userData);
+    } catch (error) {
+      showErrorMessage(error, "Error in saving user info in DB");
+    }
+  }
 };
