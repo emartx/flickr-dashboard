@@ -17,7 +17,6 @@ export const FlickrUserPrompt: React.FC = () => {
 		{ onSuccess: () => { setFlickrUser(userName); navigate("/user/index"); } }
 	);
 
-
 	return (
 		<div style={{ position: "relative" }}>
 			{isLoading && <LoadingIcon minHeight={100} />}
