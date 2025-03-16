@@ -1,34 +1,22 @@
 import React, { useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import { LoadingIcon } from "../../atoms";
 import { Button, Col, Form, FormGroup, Input, Row } from "reactstrap";
+import { useMutation } from "react-query";
+import { getAndSaveFlickrUserId } from "../../infra/photos";
 
 export const FlickrUserPrompt: React.FC = () => {
-	const { firebaseUser, getFlickrUserName, setFlickrUser } = useAuth();
+	const { getFlickrUserName, setFlickrUser } = useAuth();
 	const flickrUserName = getFlickrUserName();
 	const [userName, setUserName] = useState(flickrUserName);
-	const [isLoading, setIsLoading] = useState(false);
 	const navigate = useNavigate();
 
-	const saveInfo = async () => {
-		if (userName) {
-			setIsLoading(true);
-			const token = await firebaseUser.getIdToken();
-			await axios.get("https://checkflickrusername-ag5w5dzqxq-uc.a.run.app", {
-				params: { userName: userName },
-				headers: {
-					"Content-Type": "Application/json",
-					Authorization: `Bearer ${token}`,
-				},
-			});
-			// const flickrUserId = response.data.flickrUserId;
-			setFlickrUser(userName);
-			setIsLoading(false);
-			navigate("/user/index");
-		}
-	};
+	const { mutate: getAndSaveFlickrUserIdAndRedirect, isLoading } = useMutation(
+		() => getAndSaveFlickrUserId(userName),
+		{ onSuccess: () => { setFlickrUser(userName); navigate("/user/index"); } }
+	);
+
 
 	return (
 		<div style={{ position: "relative" }}>
@@ -44,7 +32,7 @@ export const FlickrUserPrompt: React.FC = () => {
 								placeholder="Flickr User Name"
 								value={userName}
 								onChange={(e) => setUserName(e.target.value)}
-								onKeyDown={(e) => e.key === "Enter" && saveInfo()}
+								onKeyDown={(e) => e.key === "Enter" && getAndSaveFlickrUserIdAndRedirect()}
 							/>
 						</Col>
 
@@ -53,7 +41,7 @@ export const FlickrUserPrompt: React.FC = () => {
 								className="btn-icon btn-3 w-100"
 								color="primary"
 								type="button"
-								onClick={saveInfo}
+								onClick={() => getAndSaveFlickrUserIdAndRedirect()}
 							>
 								<span className="btn-inner--icon">
 									<i className="ni ni-check-bold" />
