@@ -1,53 +1,19 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Card, CardHeader, Row, CardBody, Col, Container, NavLink } from "reactstrap";
 import { useAuth } from "../../context/AuthContext";
 import { LoadingIcon } from "../../atoms";
-import { showErrorMessage } from "../../util/errorType";
-import { doc, getDoc, getFirestore } from "firebase/firestore";
 import { useParams } from "react-router-dom";
 import { NavLink as NavLinkRRD } from "react-router-dom";
 import notFoundImage from "../../assets/img/not_found.jpg";
 import { commaSeparateNumber } from "../../util/numbers";
+import { useQuery } from "react-query";
+import { getPhoto } from "../../infra/photos";
 
-type Photo = {
-	secret: string,
-	server: string,
-	timestamp: string,
-	title: string,
-	totalComments: number,
-	totalFaves : number,
-	totalViews : number,
-}
 export const PhotoDetails: React.FC = () => {
-	const [photo, setPhoto] = useState<Photo | null>(null);
-	const [isLoading, setIsLoading] = useState(false);
 	const { firebaseUser } = useAuth();
-  const db = getFirestore();
 	const { id } = useParams();
 
-	const getPhoto = async (photoId: string) => {
-		try {
-			setIsLoading(true);
-			setPhoto(null);
-
-			const photoRef = doc(db, "users", firebaseUser.uid, "photos", photoId);
-			const photoDoc = await getDoc(photoRef);
-
-			if (photoDoc.exists()) {
-        const photoObj = photoDoc.data() as Photo;
-				setPhoto(photoObj);
-			} else {
-				showErrorMessage("Photo not found", "Error Fetching Photos");
-			}
-		} catch (error) {
-			showErrorMessage(error, "Error Fetching Photos");
-		}
-    setIsLoading(false);
-	};
-
-	useEffect(() => {
-		if (id) getPhoto(id);
-	}, [id]);
+	const { data: photo, isLoading } = useQuery("photo", () => getPhoto(id, firebaseUser.uid));
 
 	return (
 		<Card className="shadow">

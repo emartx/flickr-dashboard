@@ -1,7 +1,10 @@
 import axios from "axios";
-import { getFirestore, setDoc, doc, collection, getDocs } from "firebase/firestore";
+import { getFirestore, setDoc, doc, collection, getDocs, getDoc } from "firebase/firestore";
 import { Photo, PhotoFlickr, PhotoPayload } from "../types/photos";
 import { getToken } from "./tokenManager";
+import { showErrorMessage } from "../util/errorType";
+
+const db = getFirestore();
 
 export const fetchPhotos = async (userId: string) => {
   if (!userId) return [];
@@ -53,4 +56,23 @@ export const saveNewPhotos = async (newPhotos: PhotoFlickr[], firebaseUserId: st
       console.log(`Added photo with id: ${photo.id}`);
     });
   }
+};
+
+export const getPhoto = async (photoId: string | undefined, firebaseUserId: string) => {
+  if (!photoId) return null;
+
+  try {
+    const photoRef = doc(db, "users", firebaseUserId, "photos", photoId);
+    const photoDoc = await getDoc(photoRef);
+
+    if (photoDoc.exists()) {
+      const photoObj = photoDoc.data() as Photo;
+      return photoObj;
+    } else {
+      showErrorMessage("Photo not found", "Error Fetching Photos");
+    }
+  } catch (error) {
+    showErrorMessage(error, "Error Fetching Photos");
+  }
+  return null;
 };
