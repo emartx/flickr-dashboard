@@ -17,7 +17,7 @@
 */
 import { useState } from "react";
 import { NavLink as NavLinkRRD, Link } from "react-router-dom";
-
+import { signOut, User } from "firebase/auth";
 import {
   Collapse,
   DropdownMenu,
@@ -41,6 +41,8 @@ import {
 } from "reactstrap";
 import { useAuth } from "../../context/AuthContext";
 import { RouteType } from "../../routes";
+import { showErrorMessage } from "../../util/errorType";
+import { auth } from "../../firebase";
 
 // var ps;
 
@@ -64,7 +66,7 @@ type SidebarProps = {
   
 const Sidebar: React.FC<SidebarProps> = ({ routes, logo }) => {
   const [collapseOpen, setCollapseOpen] = useState<boolean>();
-  const { firebaseUser } = useAuth();
+  const { firebaseUser, setFirebaseUser, setFlickrUser } = useAuth();
 
   // verifies if routeName is the one active (in browser input)
   // const activeRoute = (routeName) => {
@@ -99,6 +101,18 @@ const Sidebar: React.FC<SidebarProps> = ({ routes, logo }) => {
       );
     });
   };
+
+  const handleGoogleLogout = () => {
+      signOut(auth)
+        .then(() => {
+          console.log("User logged out successfully.");
+          setFlickrUser(undefined);
+          setFirebaseUser({} as User);
+        })
+        .catch((error: unknown) => {
+          showErrorMessage(error);
+        });
+    };
 
   let navbarBrandProps;
   if (logo && logo.innerLink) {
@@ -187,7 +201,7 @@ const Sidebar: React.FC<SidebarProps> = ({ routes, logo }) => {
                 <span>Support</span>
               </DropdownItem>
               <DropdownItem divider />
-              <DropdownItem href="#pablo" onClick={(e) => e.preventDefault()}>
+              <DropdownItem href="#pablo" onClick={handleGoogleLogout}>
                 <i className="ni ni-user-run" />
                 <span>Logout</span>
               </DropdownItem>
