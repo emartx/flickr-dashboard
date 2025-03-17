@@ -2,7 +2,7 @@ import admin from "firebase-admin";
 import * as functions from "firebase-functions";
 import * as logger from "firebase-functions/logger";
 import { checkAuthorization, checkCORS } from "../util/webUtils";
-import { getUserId } from "../services";
+import { getUserId, getUserProfile } from "../services";
 import { db } from "..";
 
 export const checkFlickrUserName = functions.https.onRequest(
@@ -33,6 +33,17 @@ export const checkFlickrUserName = functions.https.onRequest(
         return;
       }
       const flickrUserId = flickrUserResult.data as string;
+
+      const flickrUserProfileResult = await getUserProfile(flickrUserId);
+      if (!flickrUserProfileResult.isDone) {
+        logger.error("Error: ", flickrUserProfileResult.message);
+        res
+          .status(flickrUserProfileResult.status)
+          .json({ error: flickrUserProfileResult.message });
+        return;
+      }
+      const flickrUserProfile = flickrUserProfileResult.data;
+      console.log(">>> flickrUserProfile:", flickrUserProfile);
 
       const userRef = db.collection("users").doc(currentFirebaseUserId);
       await userRef.set(
