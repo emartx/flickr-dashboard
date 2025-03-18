@@ -2,7 +2,7 @@ import * as functionsV2 from "firebase-functions/v2/scheduler";
 import * as logger from "firebase-functions/logger";
 import { callFlickrAPI } from "../util/flickrUtils";
 import { db } from "..";
-import { PhotStat } from "../util/types";
+import { PhotoStat } from "../util/types";
 
 export const updateFlickrStats = functionsV2.onSchedule(
 	"every day 06:00",
@@ -32,7 +32,7 @@ export const updateFlickrStats = functionsV2.onSchedule(
 			const photosListRef = usersRef.doc(userId).collection("photos");
 			const photosSnapshot = await photosListRef.get();
 
-			const userStats: PhotStat = {
+			const userStats: PhotoStat = {
 				views: 0,
         faves: 0,
         comments: 0,
@@ -52,14 +52,14 @@ export const updateFlickrStats = functionsV2.onSchedule(
 				log(
 					`Current stats for photo ${photoId}: Views -> ${totalViews}, Faves -> ${totalFaves}, Comments -> ${totalComments}`
 				);
-				const totalPhotoStats: PhotStat = {
+				const totalPhotoStats: PhotoStat = {
 					views: totalViews,
 					faves: totalFaves,
 					comments: totalComments,
 				};
 
 				try {
-					const newPhotoStats: PhotStat = {
+					const newPhotoStats: PhotoStat = {
 						views: 0,
 						faves: 0,
 						comments: 0,
@@ -110,7 +110,7 @@ export const updateFlickrStats = functionsV2.onSchedule(
 						);
 					}
 
-					const todayPhotoStats: PhotStat = {
+					const todayPhotoStats: PhotoStat = {
 						views: totalPhotoStats.views - newPhotoStats.views,
 						faves: totalPhotoStats.faves - newPhotoStats.faves,
 						comments: totalPhotoStats.comments - newPhotoStats.comments,
