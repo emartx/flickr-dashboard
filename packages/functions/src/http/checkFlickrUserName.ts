@@ -4,6 +4,7 @@ import * as logger from "firebase-functions/logger";
 import { checkAuthorization, checkCORS } from "../util/webUtils";
 import { getUserId, getUserProfile } from "../services";
 import { db } from "..";
+import { FlickrUser } from "@flickr-dashboard/core/src/types";
 
 export const checkFlickrUserName = functions.https.onRequest(
   async (req: any, res: any) => {
@@ -42,7 +43,7 @@ export const checkFlickrUserName = functions.https.onRequest(
           .json({ error: flickrUserProfileResult.message });
         return;
       }
-      const flickrUserProfile = flickrUserProfileResult.data;
+      const flickrUserProfile = flickrUserProfileResult.data as FlickrUser;
       console.log(">>> flickrUserProfile:", flickrUserProfile);
 
       const userRef = db.collection("users").doc(currentFirebaseUserId);
