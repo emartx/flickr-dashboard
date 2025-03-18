@@ -2,7 +2,7 @@ import { doc, getDoc, getFirestore, serverTimestamp, setDoc } from "firebase/fir
 import { User } from "firebase/auth";
 import axios from "axios";
 import { getToken } from "./tokenManager";
-import { UserType } from "../types/user";
+import { User as UserType } from "@flickr-dashboard/core/src/types"
 import { showErrorMessage } from "../util/errorType";
 
 const db = getFirestore();

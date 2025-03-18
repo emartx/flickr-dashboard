@@ -19,10 +19,10 @@
 // reactstrap components
 import { Button, Container, Row, Col } from "reactstrap";
 import profileCover from "../../assets/img/theme/profile-cover.jpg";
-import { UserType } from "../../types/user";
+import { User } from '@flickr-dashboard/core/src/types';
 
 type Props = {
-  user: UserType;
+  user: User;
 }
 
 const UserHeader: React.FC<Props> = ({ user }) => {

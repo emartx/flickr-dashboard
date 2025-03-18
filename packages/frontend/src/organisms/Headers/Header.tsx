@@ -22,7 +22,7 @@ import { Card, CardBody, CardTitle, Container, Row, Col } from "reactstrap";
 import { useAuth } from "../../context/AuthContext";
 import { commaSeparateNumber } from "../../util/numbers";
 import { getUserInfo } from "../../infra/users";
-import { UserType } from "../../types/user";
+import { User } from "@flickr-dashboard/core/src/types"
 import { ApiInstance } from "../../types/apis";
 
 type Props = {
@@ -38,7 +38,7 @@ const Header: React.FC<Props> = ({ displayStats = false, actions = <></> }) => {
 	const [userFaves, setUserFaves] = useState(0);
 	const [userComments, setUserComments] = useState(0);
 
-	const { isLoading } = useQuery(ApiInstance.GetUser, () => getUserInfo(firebaseUser.uid), { onSuccess: (userInfo: UserType) => {
+	const { isLoading } = useQuery(ApiInstance.GetUser, () => getUserInfo(firebaseUser.uid), { onSuccess: (userInfo: User) => {
 		if (userInfo) {
 			setPhotosCount(userInfo.photosCount);
 			setUserViews(userInfo.totalViews);
