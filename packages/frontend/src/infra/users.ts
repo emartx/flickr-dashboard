@@ -11,7 +11,7 @@ export const callApiGetAndSaveFlickrUserId = async (userName: string | undefined
   if (!userName) return "";
 
   const token = getToken();
-  const response = await axios.get("https://checkflickrusername-ag5w5dzqxq-uc.a.run.app", {
+  const response = await axios.get("https://getandsaveprofilebyusername-ag5w5dzqxq-uc.a.run.app", {
     params: { userName: userName },
     headers: {
       "Content-Type": "Application/json",
