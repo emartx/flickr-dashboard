@@ -6,9 +6,9 @@ import { getUserId, getUserProfile } from "../services";
 import { db } from "..";
 import { FlickrUser, User } from "@flickr-dashboard/core/src/types";
 
-export const checkFlickrUserName = functions.https.onRequest(
+export const getAndSaveProfileByUserName = functions.https.onRequest(
   async (req: any, res: any) => {
-    logger.info("[checkFlickrUserName] is called.");
+    logger.info("[getAndSaveProfileByUserName] is called.");
 
     checkCORS(req, res);
 

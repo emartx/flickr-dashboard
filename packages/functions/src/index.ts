@@ -1,6 +1,6 @@
 import admin from "firebase-admin";
 import { saveFlickrPhotos, updateFlickrStats } from "./scheduled";
-import { checkFlickrUserName, fetchFlickrPhotos, fetchRecentFlickrPhotos } from "./http";
+import { getAndSaveProfileByUserName, fetchFlickrPhotos, fetchRecentFlickrPhotos } from "./http";
 
 admin.initializeApp();
 export const db = admin.firestore();
@@ -9,4 +9,4 @@ export const db = admin.firestore();
 export { saveFlickrPhotos, updateFlickrStats }
 
 // HTTP Functions
-export { fetchRecentFlickrPhotos, checkFlickrUserName, fetchFlickrPhotos }
+export { fetchRecentFlickrPhotos, getAndSaveProfileByUserName, fetchFlickrPhotos }
