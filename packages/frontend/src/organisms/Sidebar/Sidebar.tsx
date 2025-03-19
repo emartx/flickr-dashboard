@@ -17,7 +17,7 @@
 */
 import { useState } from "react";
 import { NavLink as NavLinkRRD, Link } from "react-router-dom";
-import { signOut, User } from "firebase/auth";
+import { signOut, User as FirebaseUser } from "firebase/auth";
 import {
   Collapse,
   DropdownMenu,
@@ -107,7 +107,7 @@ const Sidebar: React.FC<SidebarProps> = ({ routes, logo }) => {
         .then(() => {
           console.log("User logged out successfully.");
           setFlickrUser(undefined);
-          setFirebaseUser({} as User);
+          setFirebaseUser({} as FirebaseUser);
         })
         .catch((error: unknown) => {
           showErrorMessage(error);

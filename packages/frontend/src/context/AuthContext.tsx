@@ -1,10 +1,10 @@
-import { User } from "firebase/auth";
+import { User as FirebaseUser } from "firebase/auth";
 import React, { createContext, useContext, useState } from "react";
 
 interface AuthContextType {
-  firebaseUser: User;
+  firebaseUser: FirebaseUser;
   isAuthenticated: boolean;
-  setFirebaseUser: (userInfo: User) => void;
+  setFirebaseUser: (userInfo: FirebaseUser) => void;
   getFlickrUserName: () => string | undefined;
   setFlickrUser: (username: string | undefined) => void;
 }
@@ -12,7 +12,7 @@ interface AuthContextType {
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [firebaseUser, setFirebaseUser] = useState<User>({} as User);
+  const [firebaseUser, setFirebaseUser] = useState<FirebaseUser>({} as FirebaseUser);
   const [flickrUserName, setFlickrUserNameState] = useState<string | undefined>(undefined);
 
   const isAuthenticated = !!firebaseUser && !!firebaseUser.uid;

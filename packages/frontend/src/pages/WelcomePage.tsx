@@ -2,7 +2,7 @@ import {
 	GoogleAuthProvider,
 	onAuthStateChanged,
 	signInWithPopup,
-	User,
+	User as FirebaseUser,
 } from "firebase/auth";
 import React, { useEffect } from "react";
 import { auth } from "../firebase";
@@ -33,7 +33,7 @@ export const WelcomePage: React.FC = () => {
 	const navigate = useNavigate();
 
 	const { mutate: saveOrUpdateUser } = useMutation(
-		(user: User) => callApiSaveOrUpdateUser(user), 
+		(user: FirebaseUser) => callApiSaveOrUpdateUser(user), 
 		{ onSuccess: (flickrUserName: string) => setFlickrUser(flickrUserName) }
 	);
 
@@ -53,8 +53,8 @@ export const WelcomePage: React.FC = () => {
 
 	// Listen to authentication state changes
 	useEffect(() => {
-		const unsubscribe = onAuthStateChanged(auth, (currentUser: User | null) => {
-			setFirebaseUser(currentUser || {} as User);
+		const unsubscribe = onAuthStateChanged(auth, (currentUser: FirebaseUser | null) => {
+			setFirebaseUser(currentUser || {} as FirebaseUser);
 			if(currentUser) {
 				navigate('/user');
 			}

@@ -33,7 +33,7 @@ import {
 	Media,
 } from "reactstrap";
 import { useAuth } from "../../context/AuthContext";
-import { signOut, User } from "firebase/auth";
+import { signOut, User as FirebaseUser } from "firebase/auth";
 import { auth } from "../../firebase";
 import { showErrorMessage } from "../../util/errorType";
 
@@ -48,7 +48,7 @@ const UserNavbar: React.FC<UserNavbarProps> = ({ brandText }) => {
 			.then(() => {
 				console.log("User logged out successfully.");
 				setFlickrUser(undefined);
-				setFirebaseUser({} as User);
+				setFirebaseUser({} as FirebaseUser);
 			})
 			.catch((error: unknown) => {
 				showErrorMessage(error);

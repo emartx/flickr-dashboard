@@ -1,8 +1,8 @@
 import { doc, getDoc, getFirestore, serverTimestamp, setDoc } from "firebase/firestore";
-import { User } from "firebase/auth";
+import { User as FirebaseUser } from "firebase/auth";
 import axios from "axios";
 import { getToken } from "./tokenManager";
-import { User as UserType } from "@flickr-dashboard/core/src/types"
+import { User } from "@flickr-dashboard/core/src/types"
 import { showErrorMessage } from "../util/errorType";
 
 const db = getFirestore();
@@ -27,14 +27,14 @@ export const getUserInfo = async (firebaseUserId: string) => {
   const userDoc = await getDoc(userRef);
 
   if (userDoc.exists()) {
-    return userDoc.data() as UserType;
+    return userDoc.data() as User;
   } else {
     showErrorMessage("Error in saving user info in DB");
   }
   return null;
 };
 
-export const callApiSaveOrUpdateUser = async (user: User) => {
+export const callApiSaveOrUpdateUser = async (user: FirebaseUser) => {
   if (!user) return;
 
   const userRef = doc(db, "users", user.uid);
