@@ -1,3 +1,3 @@
 export { fetchRecentFlickrPhotos } from './fetchRecentFlickrPhotos';
-export { getAndSaveProfileByUserName } from './checkFlickrUserName';
+export { getAndSaveProfileByUserName } from './getAndSaveProfileByUserName';
 export { fetchFlickrPhotos } from './fetchFlickrPhotos';
