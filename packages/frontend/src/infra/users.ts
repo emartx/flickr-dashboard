@@ -22,7 +22,7 @@ export const callApiGetAndSaveFlickrUserId = async (userName: string | undefined
   return flickrUserId;
 };
 
-export const getUserInfo = async (firebaseUserId: string) => {
+export const getUserInfo = async (firebaseUserId: string): Promise<User> => {
   const userRef = doc(db, "users", firebaseUserId);
   const userDoc = await getDoc(userRef);
 
@@ -31,7 +31,7 @@ export const getUserInfo = async (firebaseUserId: string) => {
   } else {
     showErrorMessage("Error in saving user info in DB");
   }
-  return null;
+  return new Promise((_res, rej) => rej({}));
 };
 
 export const callApiSaveOrUpdateUser = async (user: FirebaseUser) => {

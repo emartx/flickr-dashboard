@@ -43,6 +43,8 @@ export const Profile: React.FC = () => {
 
 	const { data: user, isLoading } = useQuery(ApiInstance.GetUser, () => getUserInfo(firebaseUser.uid));
 
+	if (!user) return <></>;
+
 	return (
 		<>
 			<UserHeader user={user!} />
@@ -90,29 +92,22 @@ export const Profile: React.FC = () => {
 										<div className="text-center">
 											<h3>
 												{user?.name}
-												<span className="font-weight-light">, 39</span>
 											</h3>
 											<div className="h5 font-weight-300">
 												<i className="ni location_pin mr-2" />
-												Berlin, Germany
+												{user.city}, {user.country}
 											</div>
 											<div className="h5 mt-4">
 												<i className="ni business_briefcase-24 mr-2" />
-												Photographer - EmArTx Co.
+												{user.occupation}
 											</div>
 											<div>
 												<i className="ni education_hat mr-2" />
-												University of Computer Science
 											</div>
 											<hr className="my-4" />
 											<p>
-												Ryan — the name taken by Melbourne-raised, Brooklyn-based
-												Nick Murphy — writes, performs and records all of his own
-												music.
+												{user.profile_description}
 											</p>
-											<a href="#pablo" onClick={(e) => e.preventDefault()}>
-												Show more
-											</a>
 										</div>
 
 										<Row>
@@ -210,7 +205,7 @@ export const Profile: React.FC = () => {
 													</label>
 													<Input
 														className="form-control-alternative"
-														value={user?.name.split(' ')[0] || ''}
+														value={user.first_name}
 														id="input-first-name"
 														placeholder="First name"
 														type="text"
@@ -227,7 +222,7 @@ export const Profile: React.FC = () => {
 													</label>
 													<Input
 														className="form-control-alternative"
-														value={user?.name.split(' ')[1] || ''}
+														value={user.last_name}
 														id="input-last-name"
 														placeholder="Last name"
 														type="text"
@@ -246,8 +241,8 @@ export const Profile: React.FC = () => {
 												className="form-control-alternative"
 												placeholder="A few words about you ..."
 												rows="4"
-												defaultValue="A beautiful Dashboard for Bootstrap 4. It is Free and
-                        Open Source."
+												defaultValue=""
+												value={user.profile_description}
 												type="textarea"
 											/>
 										</FormGroup>
