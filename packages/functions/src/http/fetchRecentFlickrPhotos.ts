@@ -5,9 +5,10 @@ import { callFlickrAPI } from "../util/flickrUtils";
 import { checkCORS, checkAuthorization } from "../util/webUtils";
 import { readCurrentUserFlickrId } from "../services";
 import { FlickrResult } from "@flickr-dashboard/core/src/types";
+import { Request, Response } from "firebase-functions/v1";
 
 export const fetchRecentFlickrPhotos = functions.https.onRequest(
-	async (req: any, res: any) => {
+	async (req: Request, res: Response) => {
 		const logPrefix = "[FetchRecentPhotos]";
 		const log = (message: string, ...params: unknown[]) => logger.info(logPrefix, message, ...params);
 

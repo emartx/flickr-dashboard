@@ -5,9 +5,10 @@ import { checkAuthorization, checkCORS } from "../util/webUtils";
 import { getUserId, getUserProfile } from "../services";
 import { db } from "..";
 import { FlickrUser, User } from "@flickr-dashboard/core/src/types";
+import { Request, Response } from "firebase-functions/v1";
 
 export const getAndSaveProfileByUserName = functions.https.onRequest(
-  async (req: any, res: any) => {
+  async (req: Request, res: Response) => {
     logger.info("[getAndSaveProfileByUserName] is called.");
 
     checkCORS(req, res);
@@ -21,7 +22,7 @@ export const getAndSaveProfileByUserName = functions.https.onRequest(
     const currentFirebaseUserId = authResult.data as string;
 
     try {
-      const flickrUserName = req.query.userName || "";
+      const flickrUserName = req.query.userName as string || "";
       if (!flickrUserName) throw new Error("A user name should be provided.");
       logger.info(`Target User Name: ${flickrUserName}`);
 
