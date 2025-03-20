@@ -6,7 +6,7 @@ import { LoadingIcon } from "../../atoms";
 import { usePhotos } from "../../hooks/usePhotos";
 import { getRecentPhotos, saveNewPhotos } from "../../infra/photos";
 import "./styles.css";
-import { Photo } from "../../types/photos";
+import { Photo } from "@flickr-dashboard/core/src/types";
 
 export const PhotoList: React.FC = () => {
 	const { firebaseUser, getFlickrUserName } = useAuth();

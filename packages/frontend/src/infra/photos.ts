@@ -1,6 +1,6 @@
 import axios from "axios";
 import { getFirestore, setDoc, doc, collection, getDocs, getDoc } from "firebase/firestore";
-import { Photo, PhotoFlickr, PhotoPayload } from "../types/photos";
+import { Photo, PhotoFlickr, PhotoPayload } from "@flickr-dashboard/core/src/types";
 import { getToken } from "./tokenManager";
 import { showErrorMessage } from "../util/errorType";
 

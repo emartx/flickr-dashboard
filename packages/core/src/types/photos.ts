@@ -1,4 +1,4 @@
-export type PhotoBase = {
+type PhotoBase = {
   secret: string;
   server: string;
   title: string;
