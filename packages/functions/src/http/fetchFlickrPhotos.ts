@@ -4,16 +4,18 @@ import * as logger from "firebase-functions/logger";
 import { checkAuthorization, checkCORS } from "../util/webUtils";
 import { callFlickrAPI } from "../util/flickrUtils";
 import { getUserId, readCurrentUserFlickrId } from "../services";
-import { FlickrResult } from "@flickr-dashboard/core/src/types";
+import { ErrorObj, FlickrResult } from "@flickr-dashboard/core/src/types";
+import { Request, Response } from "firebase-functions/v1";
 
 export const fetchFlickrPhotos = functions.https.onRequest(
-	async (req: any, res: any) => {
+	async (req: Request, res: Response<FlickrResult | ErrorObj>) => {
 		logger.info("[fetchFlickrPhotos] is called.");
 
 		checkCORS(req, res);
 
 		try {
-			const flickrUserName = req.query.userName;
+			const flickrUserName = req.query.userName as string;
+			const isPublicStr = req.query.isPublic as string;
 
 			logger.info(
 				flickrUserName
@@ -28,7 +30,7 @@ export const fetchFlickrPhotos = functions.https.onRequest(
 					logger.error("Error: ", flickrUserResult.message);
 					res
 						.status(flickrUserResult.status)
-						.json({ error: flickrUserResult.message });
+						.json({ message: flickrUserResult.message });
 					return;
 				}
 				flickrUserId = flickrUserResult.data as string;
@@ -36,7 +38,7 @@ export const fetchFlickrPhotos = functions.https.onRequest(
 				const authResult = await checkAuthorization(req, admin);
 				if (!authResult.isDone) {
 					logger.error("Error:", authResult.message);
-					res.status(authResult.status).json({ error: authResult.message });
+					res.status(authResult.status).json({ message: authResult.message });
 					return;
 				}
 				const currentFirebaseUserId = authResult.data as string;
@@ -45,7 +47,7 @@ export const fetchFlickrPhotos = functions.https.onRequest(
 			logger.info(`Flickr User ID: ${flickrUserId}`);
 
 			const isPublic =
-				(req.query.isPublic || "").trim().toLowerCase() === "true";
+				isPublicStr.trim().toLowerCase() === "true";
 			const flickrMethodName = isPublic ? "getPublicPhotos" : "getPhotos";
 
 			const result: FlickrResult = await callFlickrAPI("flickr.people." + flickrMethodName, {
@@ -58,10 +60,10 @@ export const fetchFlickrPhotos = functions.https.onRequest(
 			logger.error("Error fetching Flickr photos:", error);
 			res
 				.status(500)
-				.send(
-					"Error fetching Flickr photos:\n" +
+				.json({
+					message: "Error fetching Flickr photos:\n" +
 						(error as { message: string }).message
-				);
+				});
 		}
 	}
 );
