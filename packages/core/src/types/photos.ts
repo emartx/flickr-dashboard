@@ -6,6 +6,22 @@ type PhotoBase = {
 
 export type PhotoFlickr = PhotoBase & {
   id: string;
+  owner: string;
+  ispublic: number;
+  isfriend: number;
+  isfamily: number;
+  farm: number;
+}
+
+export type FlickrResult = {
+  photos: {
+    page: number,
+    pages: number,
+    perpage: number,
+    total: number;
+    photo: PhotoFlickr[];
+  }
+  stat: "ok" | "fail";
 }
 
 export type PhotoPayload = PhotoBase & {

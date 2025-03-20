@@ -1,6 +1,6 @@
 import axios from "axios";
 import { getFirestore, setDoc, doc, collection, getDocs, getDoc } from "firebase/firestore";
-import { Photo, PhotoFlickr, PhotoPayload } from "@flickr-dashboard/core/src/types";
+import { FlickrResult, Photo, PhotoFlickr, PhotoPayload } from "@flickr-dashboard/core/src/types";
 import { getToken } from "./tokenManager";
 import { showErrorMessage } from "../util/errorType";
 
@@ -19,7 +19,7 @@ export const fetchPhotos = async (userId: string) => {
   }
 };
 
-export const getRecentPhotos = async () => {
+export const getRecentPhotos = async (): Promise<FlickrResult['photos']> => {
   try {
     const token = getToken();
     const response = await axios.get(
@@ -35,7 +35,7 @@ export const getRecentPhotos = async () => {
   } catch (error) {
     console.error(error);			
   }
-  return [];
+  return new Promise((_res, rej) => rej([]));
 };
 
 export const saveNewPhotos = async (newPhotos: PhotoFlickr[], firebaseUserId: string) => {

@@ -6,7 +6,7 @@ import { LoadingIcon } from "../../atoms";
 import { usePhotos } from "../../hooks/usePhotos";
 import { getRecentPhotos, saveNewPhotos } from "../../infra/photos";
 import "./styles.css";
-import { Photo } from "@flickr-dashboard/core/src/types";
+import { Photo, PhotoFlickr } from "@flickr-dashboard/core/src/types";
 
 export const PhotoList: React.FC = () => {
 	const { firebaseUser, getFlickrUserName } = useAuth();
@@ -16,12 +16,12 @@ export const PhotoList: React.FC = () => {
 	const { data: photos, isLoading, error } = usePhotos(firebaseUser?.uid);
 	const errorMessage = (error as Error)?.message;
 
-	const getNewPhotos = async (recentPhotos: Photo[]) => {
+	const getNewPhotos = async (recentPhotos: PhotoFlickr[]) => {
 		if (!photos || photos?.length === 0) return [];
 
-		const photoIds = photos?.map((photo: { id: string }) => photo.id);
+		const photoIds = photos?.map((photo: Photo) => photo.id);
 		const newPhotos = recentPhotos.filter(
-			(photo: { id: string }) => !photoIds?.includes(photo.id)
+			(photo: PhotoFlickr) => !photoIds?.includes(photo.id)
 		);
 		return newPhotos;
 	}

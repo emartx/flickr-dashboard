@@ -4,6 +4,7 @@ import * as logger from "firebase-functions/logger";
 import { checkAuthorization, checkCORS } from "../util/webUtils";
 import { callFlickrAPI } from "../util/flickrUtils";
 import { getUserId, readCurrentUserFlickrId } from "../services";
+import { FlickrResult } from "@flickr-dashboard/core/src/types";
 
 export const fetchFlickrPhotos = functions.https.onRequest(
 	async (req: any, res: any) => {
@@ -47,7 +48,7 @@ export const fetchFlickrPhotos = functions.https.onRequest(
 				(req.query.isPublic || "").trim().toLowerCase() === "true";
 			const flickrMethodName = isPublic ? "getPublicPhotos" : "getPhotos";
 
-			const result = await callFlickrAPI("flickr.people." + flickrMethodName, {
+			const result: FlickrResult = await callFlickrAPI("flickr.people." + flickrMethodName, {
 				user_id: flickrUserId,
 			});
 			logger.info(`${result.photos.total} photos are fetched.`);

@@ -4,6 +4,7 @@ import * as logger from "firebase-functions/logger";
 import { callFlickrAPI } from "../util/flickrUtils";
 import { checkCORS, checkAuthorization } from "../util/webUtils";
 import { readCurrentUserFlickrId } from "../services";
+import { FlickrResult } from "@flickr-dashboard/core/src/types";
 
 export const fetchRecentFlickrPhotos = functions.https.onRequest(
 	async (req: any, res: any) => {
@@ -28,7 +29,7 @@ export const fetchRecentFlickrPhotos = functions.https.onRequest(
 			const todayMorning = new Date();
 			todayMorning.setHours(5, 0, 0, 0);
 			log("Today Morning:", todayMorning);
-			const result = await callFlickrAPI("flickr.photos.search", {
+			const result: FlickrResult = await callFlickrAPI("flickr.photos.search", {
 				user_id: flickrUserId,
 				min_upload_date: todayMorning,
 			});
