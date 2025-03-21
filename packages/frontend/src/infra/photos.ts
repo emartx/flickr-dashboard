@@ -31,7 +31,7 @@ export const getRecentPhotos = async (): Promise<FlickrResult['photos']> => {
         },
       }
     );
-    return response.data.photos;
+    return response.data.data.photos;
   } catch (error) {
     console.error(error);			
   }

@@ -18,7 +18,7 @@ export const callApiGetAndSaveFlickrUserId = async (userName: string | undefined
       Authorization: `Bearer ${token}`,
     },
   });
-  const flickrUserId: string = response.data.flickrUserId;
+  const flickrUserId: string = response.data.data.flickrUserId;
   return flickrUserId;
 };
 
