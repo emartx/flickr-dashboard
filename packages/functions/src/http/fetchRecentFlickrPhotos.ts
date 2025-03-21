@@ -4,11 +4,12 @@ import * as logger from "firebase-functions/logger";
 import { callFlickrAPI } from "../util/flickrUtils";
 import { checkCORS, checkAuthorization } from "../util/webUtils";
 import { readCurrentUserFlickrId } from "../services";
-import { ErrorObj, FlickrResult } from "@flickr-dashboard/core/src/types";
+import { FlickrResult } from "@flickr-dashboard/core/src/types";
 import { Request, Response } from "firebase-functions/v1";
+import { failResult, GeneralResult, successResult } from "../util/generalResult";
 
 export const fetchRecentFlickrPhotos = functions.https.onRequest(
-	async (req: Request, res: Response<FlickrResult | ErrorObj>) => {
+	async (req: Request, res: Response<GeneralResult<FlickrResult>>) => {
 		const logPrefix = "[FetchRecentPhotos]";
 		const log = (message: string, ...params: unknown[]) => logger.info(logPrefix, message, ...params);
 
@@ -20,7 +21,7 @@ export const fetchRecentFlickrPhotos = functions.https.onRequest(
 			const authResult = await checkAuthorization(req, admin);
 			if (!authResult.isDone) {
 				logger.error(logPrefix, "Error:", authResult.message);
-				res.status(authResult.status).json({ message: authResult.message });
+				res.status(authResult.status).json(failResult(authResult.status, authResult.message));
 				return;
 			}
 			const currentFirebaseUserId = authResult.data as string;
@@ -36,15 +37,12 @@ export const fetchRecentFlickrPhotos = functions.https.onRequest(
 			});
 			log(`${result.photos.total} photos are fetched.`);
 
-			res.status(200).json(result);
+			res.status(200).json(successResult(result));
 		} catch (error: unknown) {
 			logger.error(logPrefix, "Error fetching recent Flickr photos:", error);
 			res
 				.status(500)
-				.json({
-					message: "Error fetching recent Flickr photos:\n" +
-						(error as { message: string }).message
-			});
+				.json(failResult(500, "Error fetching recent Flickr photos:\n" + (error as { message: string }).message));
 		}
 	}
 );

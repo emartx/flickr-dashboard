@@ -1,11 +1,11 @@
-export type GeneralResult = {
+export type GeneralResult<T> = {
   isDone: boolean;
   status: number;
   message: string;
-  data: unknown;
+  data: T | null;
 }
 
-export const failResult = (status?: number, message?: string): GeneralResult => {
+export const failResult = <T = null>(status?: number, message?: string): GeneralResult<T> => {
   return {
     isDone: false,
     status: status ?? 500,
@@ -14,7 +14,7 @@ export const failResult = (status?: number, message?: string): GeneralResult => 
   };
 };
 
-export const successResult = (data: unknown, message?: string): GeneralResult => {
+export const successResult = <T>(data: T, message?: string): GeneralResult<T> => {
   return {
     isDone: true,
     status: 200,
