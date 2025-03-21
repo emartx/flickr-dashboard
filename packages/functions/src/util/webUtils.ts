@@ -1,5 +1,6 @@
 import { logger } from "firebase-functions";
 import { failResult, successResult } from "./generalResult";
+import { Request, Response } from "firebase-functions/v1";
 
 const allowedOrigins = [
   "https://flickr-dashboard.web.app",
@@ -8,8 +9,8 @@ const allowedOrigins = [
   "http://localhost:5174", //TODO: should be removed when deploying to production
 ];
 
-export const checkCORS = (req: any, res: any) => {
-  const currentOrigin = req.headers.origin;
+export const checkCORS = (req: Request, res: Response) => {
+  const currentOrigin = req.headers.origin || "";
   if (allowedOrigins.includes(currentOrigin)) {
     res.set("Access-Control-Allow-Origin", currentOrigin);
   }
@@ -22,7 +23,7 @@ export const checkCORS = (req: any, res: any) => {
   }
 };
 
-export const checkAuthorization = async (req: any, admin: any) => {
+export const checkAuthorization = async (req: Request, admin: any) => {
   try {
     const authHeader = req.headers.authorization;
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
