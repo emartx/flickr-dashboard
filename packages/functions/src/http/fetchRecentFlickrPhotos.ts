@@ -4,9 +4,9 @@ import * as logger from "firebase-functions/logger";
 import { callFlickrAPI } from "../util/flickrUtils";
 import { checkCORS, checkAuthorization } from "../util/webUtils";
 import { readCurrentUserFlickrId } from "../services";
-import { FlickrResult } from "@flickr-dashboard/core/src/types";
+import { FlickrResult, GeneralResult } from "@flickr-dashboard/core/src/types";
 import { Request, Response } from "firebase-functions/v1";
-import { failResult, GeneralResult, successResult } from "../util/generalResult";
+import { failResult, successResult } from "../util/generalResult";
 
 export const fetchRecentFlickrPhotos = functions.https.onRequest(
 	async (req: Request, res: Response<GeneralResult<FlickrResult>>) => {

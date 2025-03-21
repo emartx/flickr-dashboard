@@ -1,9 +1,4 @@
-export type GeneralResult<T> = {
-  isDone: boolean;
-  status: number;
-  message: string;
-  data: T | null;
-}
+import { GeneralResult } from "@flickr-dashboard/core/src/types";
 
 export const failResult = <T = null>(status?: number, message?: string): GeneralResult<T> => {
   return {

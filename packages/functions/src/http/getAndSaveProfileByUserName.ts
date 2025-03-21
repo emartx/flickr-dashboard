@@ -4,9 +4,9 @@ import * as logger from "firebase-functions/logger";
 import { checkAuthorization, checkCORS } from "../util/webUtils";
 import { getUserId, getUserProfile } from "../services";
 import { db } from "..";
-import { FlickrUser, User } from "@flickr-dashboard/core/src/types";
+import { FlickrUser, GeneralResult, User } from "@flickr-dashboard/core/src/types";
 import { Request, Response } from "firebase-functions/v1";
-import { failResult, GeneralResult, successResult } from "../util/generalResult";
+import { failResult, successResult } from "../util/generalResult";
 
 export const getAndSaveProfileByUserName = functions.https.onRequest(
   async (req: Request, res: Response<GeneralResult<{ flickrUserId: string }>>) => {
