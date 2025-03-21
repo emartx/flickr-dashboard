@@ -1,3 +1,4 @@
+import admin from "firebase-admin";
 import { logger } from "firebase-functions";
 import { failResult, successResult } from "./generalResult";
 import { Request, Response } from "firebase-functions/v1";
@@ -23,7 +24,8 @@ export const checkCORS = (req: Request, res: Response) => {
   }
 };
 
-export const checkAuthorization = async (req: Request, admin: any) => {
+type AdminType = typeof admin;
+export const checkAuthorization = async (req: Request, admin: AdminType) => {
   try {
     const authHeader = req.headers.authorization;
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
