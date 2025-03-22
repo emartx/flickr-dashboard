@@ -39,6 +39,19 @@ const useApi = () => {
         };
       }
     } catch (error) {
+      if (axios.isAxiosError(error)) {
+        const status = error.response?.status ?? 500;
+        const message = error.response?.data?.message ?? error.message;
+        console.error("Axios error:", error);
+
+        return {
+          isDone: false,
+          status,
+          message,
+          data: null,
+        };
+      }
+
       console.error("Unhandled error:", error);
       return {
         isDone: false,
