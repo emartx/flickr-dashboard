@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { LoadingIcon } from "../../atoms";
 import { usePhotos } from "../../hooks/usePhotos";
-import { getRecentPhotos, saveNewPhotos } from "../../infra/photos";
+import usePhotoApis from "../../infra/photos";
 import "./styles.css";
 import { Photo, PhotoFlickr } from "@flickr-dashboard/core/src/types";
 
@@ -12,6 +12,7 @@ export const PhotoList: React.FC = () => {
 	const { firebaseUser, getFlickrUserName } = useAuth();
 	const flickrUserName = getFlickrUserName();
 	const navigate = useNavigate();
+	const { getRecentPhotos, saveNewPhotos } = usePhotoApis();
 
 	const { data: photos, isLoading, error } = usePhotos(firebaseUser?.uid);
 	const errorMessage = (error as Error)?.message;

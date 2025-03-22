@@ -7,10 +7,11 @@ import { NavLink as NavLinkRRD } from "react-router-dom";
 import notFoundImage from "../../assets/img/not_found.jpg";
 import { commaSeparateNumber } from "../../util/numbers";
 import { useQuery } from "react-query";
-import { getPhoto } from "../../infra/photos";
+import usePhotoApis from "../../infra/photos";
 import { ApiInstance } from "../../types/apis";
 
 export const PhotoDetails: React.FC = () => {
+	const { getPhoto } = usePhotoApis();
 	const { firebaseUser } = useAuth();
 	const { id } = useParams();
 
