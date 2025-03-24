@@ -2,13 +2,21 @@ import axios, { Method } from "axios";
 import { GeneralResult } from "@flickr-dashboard/core/src/types";
 import { useAuth } from "../context/AuthContext";
 
+type OtherParams = {
+  body?: unknown,
+  params?: Record<string, string>,
+}
+
 const useApi = () => {
   const { firebaseUser } = useAuth();
 
   const callApi = async <T>(
     url: string,
     method: Method,
-    body?: unknown
+    other?: {
+      body?: unknown,
+      params?: Record<string, string>,
+    }
   ): Promise<GeneralResult<T>> => {
     try {
       const token = await firebaseUser.getIdToken();
@@ -16,11 +24,12 @@ const useApi = () => {
       const response = await axios.request<GeneralResult<T>>({
         url,
         method,
-        data: body,
+        data: other?.body,
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
+        params: other?.params,
       });
 
       const json = response.data;
@@ -63,10 +72,10 @@ const useApi = () => {
   };
 
   return {
-    getApi: <T>(url: string) => callApi<T>(url, "GET"),
-    postApi: <T>(url: string, body: any) => callApi<T>(url, "POST", body),
-    putApi: <T>(url: string, body: any) => callApi<T>(url, "PUT", body),
-    delApi: <T>(url: string) => callApi<T>(url, "DELETE"),
+    getApi: <T>(url: string, other?: OtherParams) => callApi<T>(url, "GET", other),
+    postApi: <T>(url: string, other?: OtherParams) => callApi<T>(url, "POST", other),
+    putApi: <T>(url: string, other?: OtherParams) => callApi<T>(url, "PUT", other),
+    delApi: <T>(url: string, other?: OtherParams) => callApi<T>(url, "DELETE", other),
   };
 };
 
