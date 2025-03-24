@@ -24,7 +24,6 @@ import {
 import { useNavigate } from "react-router-dom";
 import googleLogo from "../assets/img/icons/common/google.svg";
 import { showErrorMessage } from "../util/errorType";
-import { setToken } from "../infra/tokenManager";
 import { useMutation } from "react-query";
 import useUserApis from "../infra/users";
 
@@ -45,7 +44,6 @@ export const WelcomePage: React.FC = () => {
 			console.log("User Info:", result.user);
 
 			saveOrUpdateUser(result.user);
-			setToken(await result.user.getIdToken());
 			navigate("/user");
 		} catch (error: unknown) {
 			showErrorMessage(error);
