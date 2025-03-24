@@ -21,7 +21,7 @@ import { useQuery } from "react-query";
 import { Card, CardBody, CardTitle, Container, Row, Col } from "reactstrap";
 import { useAuth } from "../../context/AuthContext";
 import { commaSeparateNumber } from "../../util/numbers";
-import { getUserInfo } from "../../infra/users";
+import useUserApis from "../../infra/users";
 import { User } from "@flickr-dashboard/core/src/types"
 import { ApiInstance } from "../../types/apis";
 
@@ -32,6 +32,7 @@ type Props = {
 
 const Header: React.FC<Props> = ({ displayStats = false, actions = <></> }) => {
 	const { firebaseUser } = useAuth();
+	const { getUserInfo } = useUserApis();
 	
 	const [photosCount, setPhotosCount] = useState(0);
 	const [userViews, setUserViews] = useState(0);

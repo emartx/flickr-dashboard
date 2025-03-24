@@ -35,11 +35,12 @@ import { useAuth } from "../context/AuthContext.js";
 import { StatsSimpleBox } from "../atoms";
 import { commaSeparateNumber } from "../util/numbers";
 import { useQuery } from "react-query";
-import { getUserInfo } from "../infra/users.js";
+import useUserApis from "../infra/users.js";
 import { ApiInstance } from "../types/apis.js";
 
 export const Profile: React.FC = () => {
 	const { firebaseUser } = useAuth();
+	const { getUserInfo } = useUserApis();
 
 	const { data: user, isLoading } = useQuery(ApiInstance.GetUser, () => getUserInfo(firebaseUser.uid));
 

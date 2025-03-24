@@ -26,12 +26,13 @@ import googleLogo from "../assets/img/icons/common/google.svg";
 import { showErrorMessage } from "../util/errorType";
 import { setToken } from "../infra/tokenManager";
 import { useMutation } from "react-query";
-import { callApiSaveOrUpdateUser } from "../infra/users";
+import useUserApis from "../infra/users";
 
 export const WelcomePage: React.FC = () => {
 	const { setFirebaseUser, setFlickrUser } = useAuth();
 	const navigate = useNavigate();
 
+	const { callApiSaveOrUpdateUser } = useUserApis();
 	const { mutate: saveOrUpdateUser } = useMutation(
 		(user: FirebaseUser) => callApiSaveOrUpdateUser(user), 
 		{ onSuccess: (flickrUserName: string) => setFlickrUser(flickrUserName) }
