@@ -32,7 +32,9 @@ export const PhotoList: React.FC = () => {
 
 		(async () => {
 			const recentPhotos = await getRecentPhotos();
-			const newPhotos = await getNewPhotos(recentPhotos.photo);
+			if (! recentPhotos.isDone) return;
+
+			const newPhotos = await getNewPhotos(recentPhotos.data?.photos.photo || []);
 
 			saveNewPhotos(newPhotos, firebaseUser.uid);
 		})();

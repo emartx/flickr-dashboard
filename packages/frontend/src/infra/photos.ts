@@ -8,6 +8,7 @@ import {
 } from "firebase/firestore";
 import {
 	FlickrResult,
+	GeneralResult,
 	Photo,
 	PhotoFlickr,
 	PhotoPayload,
@@ -34,20 +35,12 @@ const usePhotoApis = () => {
 		}
 	};
 
-	const getRecentPhotos = async (): Promise<FlickrResult["photos"]> => {
-    const emptyResponse = {
-      page: 1,
-      pages: 1,
-      perpage: 1,
-      total: 1,
-      photo: []
-    };
-  
+	const getRecentPhotos = async (): Promise<GeneralResult<FlickrResult>> => {
 		try {
-			const response = await getApi<FlickrResult['photos']>(
+			const response = await getApi<FlickrResult>(
 				"https://fetchrecentflickrphotos-ag5w5dzqxq-uc.a.run.app/",
 			);
-			return response.data || emptyResponse;
+			return response;
 		} catch (error) {
 			console.error(error);
 		}
