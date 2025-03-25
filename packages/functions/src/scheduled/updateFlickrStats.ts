@@ -3,6 +3,7 @@ import * as logger from "firebase-functions/logger";
 import { callFlickrAPI } from "../util/flickrUtils";
 import { db } from "..";
 import { PhotoStat } from "../util/types";
+import runConcurrent from "../util/runConcurrent";
 
 export const updateFlickrStats = functionsV2.onSchedule(
 	"every day 06:00",
@@ -22,26 +23,19 @@ export const updateFlickrStats = functionsV2.onSchedule(
 			const userId = userDoc.id;
 			const { flickrUserName } = userDoc.data();
 			log("--------------------------------");
-			log(
-				"Checking the Photos owned by User '" +
-					flickrUserName +
-					"' (" +
-					userId +
-					")"
-			);
+			log(`Checking the Photos owned by '${flickrUserName}' (${userId})`);
 			const photosListRef = usersRef.doc(userId).collection("photos");
 			const photosSnapshot = await photosListRef.get();
 
 			const userStats: PhotoStat = {
 				views: 0,
-        faves: 0,
-        comments: 0,
-			}
+				faves: 0,
+				comments: 0,
+			};
 
-			for (const photoDoc of photosSnapshot.docs) {
-				log("- - - - - - - - - - - - - - - - -");
-
+			await runConcurrent(photosSnapshot.docs, async (photoDoc) => {
 				const photoId = photoDoc.id;
+				log("- - - - - - - - - - - - - - - - -");
 				log("Fetching the statistics of photo " + photoId);
 
 				const {
@@ -69,7 +63,7 @@ export const updateFlickrStats = functionsV2.onSchedule(
 						photo_id: photoId,
 					});
 					newPhotoStats.views = parseInt(result?.photo?.views, 10);
-					newPhotoStats.comments = parseInt(result?.photo?.comments._content, 10);
+					newPhotoStats.comments = parseInt(result?.photo?.comments?._content, 10);
 
 					const resultFaves = await callFlickrAPI(
 						"flickr.photos.getFavorites",
@@ -93,7 +87,7 @@ export const updateFlickrStats = functionsV2.onSchedule(
 						totalPhotoStats.comments === 0
 					) {
 						log(
-							`No pre photo states was saved, Initializing the stats for photo ${photoId} from user '${flickrUserName}'`
+							`No previous stats. Initializing stats for photo ${photoId} from user '${flickrUserName}'`
 						);
 
 						totalPhotoStats.views = newPhotoStats.views;
@@ -134,9 +128,9 @@ export const updateFlickrStats = functionsV2.onSchedule(
 						error
 					);
 				}
-			}
+			}, 5);
 
-			usersRef.doc(userId).update({
+			await usersRef.doc(userId).update({
 				totalViews: userStats.views,
 				totalFaves: userStats.faves,
 				totalComments: userStats.comments,
