@@ -3,6 +3,7 @@ import * as logger from "firebase-functions/logger";
 import { callFlickrAPI } from "../util/flickrUtils";
 import { db } from "..";
 import { PhotoStat } from "../util/types";
+import retryWithBackoff from "../util/retryWithBackoff";
 import runConcurrent from "../util/runConcurrent";
 
 export const updateFlickrStats = functionsV2.onSchedule(
@@ -59,18 +60,17 @@ export const updateFlickrStats = functionsV2.onSchedule(
 						comments: 0,
 					};
 
-					const result = await callFlickrAPI("flickr.photos.getInfo", {
-						photo_id: photoId,
-					});
+					const result = await retryWithBackoff(() =>
+						callFlickrAPI("flickr.photos.getInfo", { photo_id: photoId })
+					);
 					newPhotoStats.views = parseInt(result?.photo?.views, 10);
 					newPhotoStats.comments = parseInt(result?.photo?.comments?._content, 10);
 
-					const resultFaves = await callFlickrAPI(
-						"flickr.photos.getFavorites",
-						{
+					const resultFaves = await retryWithBackoff(() =>
+						callFlickrAPI("flickr.photos.getFavorites", {
 							photo_id: photoId,
 							per_page: 1,
-						}
+						})
 					);
 					newPhotoStats.faves = parseInt(resultFaves?.photo?.total, 10);
 					log(
