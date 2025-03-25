@@ -34,6 +34,7 @@ export const updateFlickrStats = functionsV2.onSchedule(
 				comments: 0,
 			};
 
+			const CONCURRENT_FLICKR_STATS = 5;
 			await runConcurrent(photosSnapshot.docs, async (photoDoc) => {
 				const photoId = photoDoc.id;
 				log("- - - - - - - - - - - - - - - - -");
@@ -128,7 +129,7 @@ export const updateFlickrStats = functionsV2.onSchedule(
 						error
 					);
 				}
-			}, 5);
+			}, CONCURRENT_FLICKR_STATS);
 
 			await usersRef.doc(userId).update({
 				totalViews: userStats.views,
