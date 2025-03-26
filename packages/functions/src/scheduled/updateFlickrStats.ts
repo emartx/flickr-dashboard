@@ -106,9 +106,9 @@ export const updateFlickrStats = functionsV2.onSchedule(
 					}
 
 					const todayPhotoStats: PhotoStat = {
-						views: totalPhotoStats.views - newPhotoStats.views,
-						faves: totalPhotoStats.faves - newPhotoStats.faves,
-						comments: totalPhotoStats.comments - newPhotoStats.comments,
+						views: newPhotoStats.views - totalPhotoStats.views,
+						faves: newPhotoStats.faves - totalPhotoStats.faves,
+						comments: newPhotoStats.comments - totalPhotoStats.comments,
 					};
 					const statsRef = photosListRef
 						.doc(photoId)
