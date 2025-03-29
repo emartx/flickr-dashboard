@@ -5,6 +5,7 @@ import { db } from "..";
 import { PhotoStat } from "../util/types";
 import retryWithBackoff from "../util/retryWithBackoff";
 import runConcurrent from "../util/runConcurrent";
+import { calculateInterestRate } from "../util/calculateInterestRate";
 
 export const updateFlickrStats = functionsV2.onSchedule(
 	"every day 06:00",
@@ -82,6 +83,8 @@ export const updateFlickrStats = functionsV2.onSchedule(
 					userStats.faves += newPhotoStats.faves;
 					userStats.comments += newPhotoStats.comments;
 
+					let interestRate = 0;
+
 					if (
 						totalPhotoStats.views === 0 &&
 						totalPhotoStats.faves === 0 &&
@@ -95,11 +98,18 @@ export const updateFlickrStats = functionsV2.onSchedule(
 						totalPhotoStats.faves = newPhotoStats.faves;
 						totalPhotoStats.comments = newPhotoStats.comments;
 
+						interestRate = calculateInterestRate(
+							totalPhotoStats.views,
+							totalPhotoStats.faves,
+							totalPhotoStats.comments
+						);
+
 						await photosListRef.doc(photoId).set(
 							{
 								totalViews: totalPhotoStats.views,
 								totalFaves: totalPhotoStats.faves,
 								totalComments: totalPhotoStats.comments,
+								interestRate: interestRate,
 							},
 							{ merge: true }
 						);
@@ -118,6 +128,7 @@ export const updateFlickrStats = functionsV2.onSchedule(
 						faves: todayPhotoStats.faves,
 						comments: todayPhotoStats.comments,
 						views: todayPhotoStats.views,
+						interestRate: interestRate,
 					});
 
 					log(
