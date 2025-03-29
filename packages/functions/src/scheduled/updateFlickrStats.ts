@@ -5,7 +5,7 @@ import { db } from "..";
 import { PhotoStat } from "../util/types";
 import retryWithBackoff from "../util/retryWithBackoff";
 import runConcurrent from "../util/runConcurrent";
-import { calculateInterestRate } from "../util/calculateInterestRate";
+import { calculateInterestRate, isEmptyStat } from "../util/calculateInterestRate";
 
 export const updateFlickrStats = functionsV2.onSchedule(
 	"every day 06:00",
@@ -41,18 +41,14 @@ export const updateFlickrStats = functionsV2.onSchedule(
 				log("- - - - - - - - - - - - - - - - -");
 				log("Fetching the statistics of photo " + photoId);
 
-				const {
-					totalViews = 0,
-					totalFaves = 0,
-					totalComments = 0,
-				} = photoDoc.data();
+				const currentPhoto = photoDoc.data();
 				log(
-					`Current stats for photo ${photoId}: Views -> ${totalViews}, Faves -> ${totalFaves}, Comments -> ${totalComments}`
+					`Current stats for photo ${photoId}: Views -> ${currentPhoto.totalViews}, Faves -> ${currentPhoto.totalFaves}, Comments -> ${currentPhoto.totalComments}`
 				);
-				const totalPhotoStats: PhotoStat = {
-					views: totalViews,
-					faves: totalFaves,
-					comments: totalComments,
+				const yesterdayPhotoStats: PhotoStat = {
+					views: currentPhoto.totalViews,
+					faves: currentPhoto.totalFaves,
+					comments: currentPhoto.totalComments,
 				};
 
 				try {
@@ -83,48 +79,43 @@ export const updateFlickrStats = functionsV2.onSchedule(
 					userStats.faves += newPhotoStats.faves;
 					userStats.comments += newPhotoStats.comments;
 
-					let interestRate = 0;
-
-					if (
-						totalPhotoStats.views === 0 &&
-						totalPhotoStats.faves === 0 &&
-						totalPhotoStats.comments === 0
-					) {
+					if (isEmptyStat(yesterdayPhotoStats)) {
 						log(
 							`No previous stats. Initializing stats for photo ${photoId} from user '${flickrUserName}'`
 						);
 
-						totalPhotoStats.views = newPhotoStats.views;
-						totalPhotoStats.faves = newPhotoStats.faves;
-						totalPhotoStats.comments = newPhotoStats.comments;
-
-						interestRate = calculateInterestRate(
-							totalPhotoStats.views,
-							totalPhotoStats.faves,
-							totalPhotoStats.comments
-						);
-
-						await photosListRef.doc(photoId).set(
-							{
-								totalViews: totalPhotoStats.views,
-								totalFaves: totalPhotoStats.faves,
-								totalComments: totalPhotoStats.comments,
-								interestRate: interestRate,
-							},
-							{ merge: true }
-						);
+						yesterdayPhotoStats.views = newPhotoStats.views;
+						yesterdayPhotoStats.faves = newPhotoStats.faves;
+						yesterdayPhotoStats.comments = newPhotoStats.comments;
 					}
 
+					const interestRate = calculateInterestRate(
+						newPhotoStats.views,
+						newPhotoStats.faves,
+						newPhotoStats.comments
+					);
+					log(`New photo interest rate -> ${interestRate}`);
+
+					await photosListRef.doc(photoId).set(
+						{
+							totalViews: newPhotoStats.views,
+							totalFaves: newPhotoStats.faves,
+							totalComments: newPhotoStats.comments,
+							interestRate: interestRate,
+						},
+						{ merge: true }
+					);
+
 					const todayPhotoStats: PhotoStat = {
-						views: newPhotoStats.views - totalPhotoStats.views,
-						faves: newPhotoStats.faves - totalPhotoStats.faves,
-						comments: newPhotoStats.comments - totalPhotoStats.comments,
+						views: newPhotoStats.views - yesterdayPhotoStats.views,
+						faves: newPhotoStats.faves - yesterdayPhotoStats.faves,
+						comments: newPhotoStats.comments - yesterdayPhotoStats.comments,
 					};
-					const statsRef = photosListRef
+					const todayStatsRef = photosListRef
 						.doc(photoId)
 						.collection("history")
 						.doc(today);
-					await statsRef.set({
+					await todayStatsRef.set({
 						faves: todayPhotoStats.faves,
 						comments: todayPhotoStats.comments,
 						views: todayPhotoStats.views,
