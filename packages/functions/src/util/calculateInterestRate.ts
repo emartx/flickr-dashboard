@@ -9,7 +9,7 @@ export const calculateInterestRate = (views: number, faves: number, comments: nu
   }
   const interestRate = ((faves * FAVES_WEIGHT + comments * COMMENTS_WEIGHT) / views) * 100;
 
-  return parseInt(interestRate.toFixed(0), 10);
+  return parseFloat(interestRate.toFixed(2));
 }
 
 export const isEmptyStat = (stat: PhotoStat) => {
