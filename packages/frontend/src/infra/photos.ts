@@ -62,6 +62,7 @@ const usePhotoApis = () => {
 					totalComments: 0,
 					totalFaves: 0,
 					totalViews: 0,
+					interestRate: 0,
 				};
 				const photoRef = doc(db, "users", firebaseUserId, "photos", photo.id);
 				await setDoc(photoRef, photoDetails);
