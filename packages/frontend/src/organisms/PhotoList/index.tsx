@@ -7,6 +7,7 @@ import { usePhotos } from "../../hooks/usePhotos";
 import usePhotoApis from "../../infra/photos";
 import "./styles.css";
 import { Photo, PhotoFlickr } from "@flickr-dashboard/core/src/types";
+import Pie from "../../molecules/Pie";
 
 export const PhotoList: React.FC = () => {
 	const { firebaseUser, getFlickrUserName } = useAuth();
@@ -87,12 +88,7 @@ export const PhotoList: React.FC = () => {
 					<Container>
 						<Row>
 							{photos?.map(
-								(photo: {
-									id: string;
-									server: string;
-									secret: string;
-									title: string;
-								}) => (
+								(photo) => (
 									<Col key={photo.id} className="py-2 text-center" xs="6" sm="4" md="4" lg="3" xl="2">
 										<img
 											src={`https://live.staticflickr.com/${photo.server}/${photo.id}_${photo.secret}_q.jpg`}
@@ -101,6 +97,8 @@ export const PhotoList: React.FC = () => {
 											onClick={() => navigate(`/user/photo/${photo.id}`)}
 											className="photo-thumbnail w-100"
 										/>
+
+										<Pie percentage={photo.interestRate * 10} colour={"#ff0000"} />
 									</Col>
 								)
 							)}
