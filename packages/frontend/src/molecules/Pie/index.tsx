@@ -8,9 +8,9 @@ const cleanPercentage = (percentage: number) => {
 
 type CircleProps = {
   colour: string;
-  pct?: number;
+  pct: number;
 }
-const Circle: React.FC<CircleProps> = ({colour, pct = 0}) => {
+const Circle: React.FC<CircleProps> = ({colour, pct}) => {
   const r = 70;
   const circ = 2 * Math.PI * r;
   const strokePct = ((100 - pct) * circ) / 100;
@@ -19,7 +19,7 @@ const Circle: React.FC<CircleProps> = ({colour, pct = 0}) => {
       r={r}
       cx={100}
       cy={100}
-      fill="rgb(100, 100, 100, 0.1)"
+      fill="transparent"
       stroke={strokePct !== circ ? colour : ""}
       strokeWidth={"1rem"}
       strokeDasharray={circ}
@@ -52,7 +52,7 @@ const Pie: React.FC<PieProps> = ({ percentage, colour }) => {
   return (
     <svg width={200} height={200}>
       <g transform={`rotate(-90 ${"100 100"})`}>
-        <Circle colour="lightgrey" />
+        <Circle colour="lightgrey" pct={100} />
         <Circle colour={colour} pct={pct} />
       </g>
       <Text percentage={pct} />
