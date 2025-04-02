@@ -7,7 +7,6 @@ import { usePhotos } from "../../hooks/usePhotos";
 import usePhotoApis from "../../infra/photos";
 import "./styles.css";
 import { Photo, PhotoFlickr } from "@flickr-dashboard/core/src/types";
-// import Pie from "../../molecules/Pie";
 import { SmallStats } from "../../molecules/SmallStats";
 
 export const PhotoList: React.FC = () => {
@@ -99,7 +98,6 @@ export const PhotoList: React.FC = () => {
 											className="w-100"
 										/>
 
-										{/* <Pie percentage={photo.interestRate * 10} colour={"#ff0000"} /> */}
 										<SmallStats photo={photo} />
 									</Col>
 								)

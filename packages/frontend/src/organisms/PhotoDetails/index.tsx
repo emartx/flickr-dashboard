@@ -1,5 +1,13 @@
 import React from "react";
-import { Card, CardHeader, Row, CardBody, Col, Container, NavLink } from "reactstrap";
+import {
+	Card,
+	CardHeader,
+	Row,
+	CardBody,
+	Col,
+	Container,
+	NavLink,
+} from "reactstrap";
 import { useAuth } from "../../context/AuthContext";
 import { LoadingIcon } from "../../atoms";
 import { useParams } from "react-router-dom";
@@ -9,13 +17,16 @@ import { commaSeparateNumber } from "../../util/numbers";
 import { useQuery } from "react-query";
 import usePhotoApis from "../../infra/photos";
 import { ApiInstance } from "../../types/apis";
+import Pie from "../../molecules/Pie";
 
 export const PhotoDetails: React.FC = () => {
 	const { getPhoto } = usePhotoApis();
 	const { firebaseUser } = useAuth();
 	const { id } = useParams();
 
-	const { data: photo, isLoading } = useQuery(ApiInstance.GetPhoto, () => getPhoto(id, firebaseUser.uid));
+	const { data: photo, isLoading } = useQuery(ApiInstance.GetPhoto, () =>
+		getPhoto(id, firebaseUser.uid)
+	);
 
 	return (
 		<Card className="shadow">
@@ -25,7 +36,9 @@ export const PhotoDetails: React.FC = () => {
 						<h6 className="text-uppercase text-muted ls-1 mb-1">
 							Photo from Flickr
 						</h6>
-						<h2 className="mb-0">{photo ? photo.title : "The photo not found"}</h2>
+						<h2 className="mb-0">
+							{photo ? photo.title : "The photo not found"}
+						</h2>
 					</div>
 					<div>
 						<NavLink
@@ -53,42 +66,42 @@ export const PhotoDetails: React.FC = () => {
 
 					{!isLoading && photo && (
 						<Container>
-							<Row className="mb-3">
-								<Col lg="4" sm="12">
-							    <Row>
-										<Col xs="6" lg="auto">
-											<i className="fas fa-eye"></i>
-											<span className="lg-12"> Views: </span>
-										</Col>
-										<Col xs="6" lg="auto" className="pl-0">
-											{commaSeparateNumber(photo.totalViews)}
-										</Col>
-									</Row>
+							<Row>
+								<Col>
+									<Pie percentage={photo.interestRate} colour={"red"} />
 								</Col>
-								<Col lg="4" sm="12">
-									<Row>
-										<Col xs="6" lg="auto">
-											<i className="ni ni-favourite-28"></i>
-											<span className="lg-12"> Faves: </span>
-										</Col>
-										<Col xs="6" lg="auto" className="pl-0">
-											{commaSeparateNumber(photo.totalFaves)}
-										</Col>
-									</Row>
-								</Col>
-								<Col lg="4" sm="12">
-									<Row>
-										<Col xs="6" lg="auto">
-											<i className="ni ni-chat-round"></i>
-											<span className="lg-12"> Comments: </span>
-										</Col>
-										<Col xs="6" lg="auto" className="pl-0">
-											{commaSeparateNumber(photo.totalComments)}
-										</Col>
-									</Row>
+								<Col>
+									<Container className="h-100 d-flex flex-column justify-content-around">
+										<Row>
+											<Col xs="6" lg="auto">
+												<i className="fas fa-eye"></i>
+												<span className="lg-12"> Views: </span>
+											</Col>
+											<Col xs="6" lg="auto" className="pl-0">
+												{commaSeparateNumber(photo.totalViews)}
+											</Col>
+										</Row>
+										<Row>
+											<Col xs="6" lg="auto">
+												<i className="ni ni-favourite-28"></i>
+												<span className="lg-12"> Faves: </span>
+											</Col>
+											<Col xs="6" lg="auto" className="pl-0">
+												{commaSeparateNumber(photo.totalFaves)}
+											</Col>
+										</Row>
+										<Row>
+											<Col xs="6" lg="auto">
+												<i className="ni ni-chat-round"></i>
+												<span className="lg-12"> Comments: </span>
+											</Col>
+											<Col xs="6" lg="auto" className="pl-0">
+												{commaSeparateNumber(photo.totalComments)}
+											</Col>
+										</Row>
+									</Container>
 								</Col>
 							</Row>
-
 							<Row>
 								<img
 									src={`https://live.staticflickr.com/${photo.server}/${id}_${photo.secret}_b.jpg`}
