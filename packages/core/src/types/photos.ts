@@ -29,6 +29,7 @@ export type PhotoPayload = PhotoBase & {
   totalComments: number;
   totalFaves: number;
   totalViews: number;
+  interestRate: number;
 }
 
 export type Photo = PhotoPayload & {
