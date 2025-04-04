@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { Card, CardHeader, Row, CardBody, Button, Container, Col } from "reactstrap";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import { LoadingIcon } from "../../atoms";
+import { LoadingIcon, ProgressBar } from "../../atoms";
 import { usePhotos } from "../../hooks/usePhotos";
 import usePhotoApis from "../../infra/photos";
 import "./styles.css";
@@ -97,6 +97,7 @@ export const PhotoList: React.FC = () => {
 											onClick={() => navigate(`/user/photo/${photo.id}`)}
 											className="w-100"
 										/>
+										<ProgressBar progressValue={photo.interestRate} />
 
 										<SmallStats photo={photo} />
 									</Col>
