@@ -18,7 +18,7 @@ type SmallStatsProps = {
 export const SmallStats: React.FC<SmallStatsProps> = ({photo}) => {
 	return (
 		<Container className="mt-2">
-      <StatsRow icon="fas fa-thermometer-full" value={photo.interestRate} />
+      {/* <StatsRow icon="fas fa-thermometer-full" value={photo.interestRate} /> */}
       <StatsRow icon="fas fa-eye" value={photo.totalViews} />
       <StatsRow icon="ni ni-favourite-28" value={photo.totalFaves} />
       <StatsRow icon="ni ni-chat-round" value={photo.totalComments} />
