@@ -1,4 +1,6 @@
 import React from "react";
+import { useQuery } from "react-query";
+import { useParams, NavLink as NavLinkRRD } from "react-router-dom";
 import {
 	Card,
 	CardHeader,
@@ -9,15 +11,12 @@ import {
 	NavLink,
 } from "reactstrap";
 import { useAuth } from "../../context/AuthContext";
-import { LoadingIcon } from "../../atoms";
-import { useParams } from "react-router-dom";
-import { NavLink as NavLinkRRD } from "react-router-dom";
-import notFoundImage from "../../assets/img/not_found.jpg";
+import { LoadingIcon, VerticalGauge } from "../../atoms";
+import Pie from "../../molecules/Pie";
 import { commaSeparateNumber } from "../../util/numbers";
-import { useQuery } from "react-query";
 import usePhotoApis from "../../infra/photos";
 import { ApiInstance } from "../../types/apis";
-import Pie from "../../molecules/Pie";
+import notFoundImage from "../../assets/img/not_found.jpg";
 
 export const PhotoDetails: React.FC = () => {
 	const { getPhoto } = usePhotoApis();
@@ -101,6 +100,13 @@ export const PhotoDetails: React.FC = () => {
 										</Row>
 									</Container>
 								</Col>
+							</Row>
+							<Row>
+								<Container className="d-flex justify-content-center">
+									<VerticalGauge min={0} max={100} mean={60} value={photo.totalViews} />
+									<VerticalGauge min={0} max={100} mean={60} value={photo.totalFaves} />
+									<VerticalGauge min={0} max={100} mean={60} value={photo.totalComments} />
+								</Container>
 							</Row>
 							<Row>
 								<img
