@@ -22,35 +22,30 @@ export const VerticalGauge: React.FC<VerticalGaugeProps> = ({ min, max, mean, va
 
   return (
     <Card style={{ width: '120px', margin: '1rem' }}>
-      <CardBody style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      <CardBody className='d-flex flex-column align-items-center'>
         <Label>{max}</Label>
-        <div style={{ position: 'relative', height: `${gaugeHeight}px`, width: '4px', backgroundColor: '#ccc', margin: '10px 0' }}>
+        <div className='position-relative bg-light my-2 mx-0' style={{ height: `${gaugeHeight}px`, width: '4px' }}>
           <div
+            className='position-absolute border border-top-1 border-primary'
             style={{
-              position: 'absolute',
               top: `${meanPos}px`,
               left: '-8px',
               width: '20px',
               height: '1px',
-              borderTop: '1px dashed #007bff',
+              // borderTop: '1px dashed #007bff',
             }}
             title={`Mean: ${mean}`}
           ></div>
 
           <div
+            className='position-absolute bg-danger text-white rounded-circle text-center font-weight-bold'
             style={{
-              position: 'absolute',
               top: `${valuePos - 6}px`,
               left: '-8px',
               width: '20px',
-              height: '12px',
-              backgroundColor: '#dc3545',
-              borderRadius: '4px',
-              textAlign: 'center',
-              color: '#fff',
+              height: '20px',
               fontSize: '12px',
-              lineHeight: '12px',
-              fontWeight: 'bold',
+              lineHeight: '20px',
             }}
             title={`Value: ${value}`}
           >
