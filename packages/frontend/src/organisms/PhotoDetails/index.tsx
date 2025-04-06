@@ -103,9 +103,9 @@ export const PhotoDetails: React.FC = () => {
 							</Row>
 							<Row>
 								<Container className="d-flex justify-content-center">
-									<VerticalGauge min={0} max={100} mean={60} value={photo.totalViews} />
-									<VerticalGauge min={0} max={100} mean={60} value={photo.totalFaves} />
-									<VerticalGauge min={0} max={100} mean={60} value={photo.totalComments} />
+									<VerticalGauge min={0} max={100} mean={60} value={photo.totalViews} title="Views" />
+									<VerticalGauge min={0} max={100} mean={60} value={photo.totalFaves} title="Faves" />
+									<VerticalGauge min={0} max={100} mean={60} value={photo.totalComments} title="Comments" />
 								</Container>
 							</Row>
 							<Row>
