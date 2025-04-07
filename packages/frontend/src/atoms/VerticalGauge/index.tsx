@@ -3,13 +3,14 @@ import { Card, CardBody, Label } from 'reactstrap';
 
 type VerticalGaugeProps = {
   title: string;
+  icon: string;
   min: number;
   max: number;
   mean: number;
   value: number;
 };
 
-export const VerticalGauge: React.FC<VerticalGaugeProps> = ({ title, min, max, mean, value }) => {
+export const VerticalGauge: React.FC<VerticalGaugeProps> = ({ title, icon, min, max, mean, value }) => {
   const gaugeHeight = 300;
 
   const getRelativePosition = (val: number) => {
@@ -55,7 +56,7 @@ export const VerticalGauge: React.FC<VerticalGaugeProps> = ({ title, min, max, m
         </div>
         <Label>{min}</Label>
 
-        <Label className='text-center'>{title}</Label>
+        <Label className='text-center'><i className={icon}></i> {title}</Label>
       </CardBody>
     </Card>
   );
