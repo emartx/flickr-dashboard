@@ -65,7 +65,7 @@ export const PhotoDetails: React.FC = () => {
 
 					{!isLoading && photo && (
 						<Container>
-							<Row>
+							{/* <Row>
 								<Col>
 									<Pie percentage={photo.interestRate} colour={"red"} />
 								</Col>
@@ -100,12 +100,23 @@ export const PhotoDetails: React.FC = () => {
 										</Row>
 									</Container>
 								</Col>
-							</Row>
+							</Row> */}
 							<Row>
 								<Container className="d-flex justify-content-center">
-									<VerticalGauge min={0} max={100} mean={60} value={photo.totalViews} title="Views" icon="fas fa-eye" />
-									<VerticalGauge min={0} max={100} mean={60} value={photo.totalFaves} title="Faves" icon="ni ni-favourite-28" />
-									<VerticalGauge min={0} max={100} mean={60} value={photo.totalComments} title="Comments" icon="ni ni-chat-round" />
+									<Row className="w-100 align-items-center">
+										<Col xs={12} md={3}>
+											<Pie percentage={photo.interestRate} colour={"red"} />
+										</Col>
+										<Col xs={6} md={3}>
+											<VerticalGauge min={0} max={100} mean={60} value={photo.totalViews} title="Views" icon="fas fa-eye" />
+										</Col>
+										<Col xs={6} md={3}>
+											<VerticalGauge min={0} max={100} mean={60} value={photo.totalFaves} title="Faves" icon="ni ni-favourite-28" />
+										</Col>
+										<Col xs={6} md={3}>
+											<VerticalGauge min={0} max={100} mean={60} value={photo.totalComments} title="Comments" icon="ni ni-chat-round" />
+										</Col>
+									</Row>
 								</Container>
 							</Row>
 							<Row>
