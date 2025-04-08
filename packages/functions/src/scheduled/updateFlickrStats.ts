@@ -3,6 +3,7 @@ import * as logger from "firebase-functions/logger";
 import { callFlickrAPI } from "../util/flickrUtils";
 import { db } from "..";
 import { PhotoStat } from "../util/types";
+import { getMaxPhotoStat, getMinPhotoStat, getNewPhotoStat } from "../util/stats";
 import retryWithBackoff from "../util/retryWithBackoff";
 import runConcurrent from "../util/runConcurrent";
 import { calculateInterestRate, isEmptyStat } from "../util/calculateInterestRate";
@@ -29,11 +30,9 @@ export const updateFlickrStats = functionsV2.onSchedule(
 			const photosListRef = usersRef.doc(userId).collection("photos");
 			const photosSnapshot = await photosListRef.get();
 
-			const userStats: PhotoStat = {
-				views: 0,
-				faves: 0,
-				comments: 0,
-			};
+			const userStats = getNewPhotoStat();
+			let minUserStats = getNewPhotoStat();
+			let maxUserStats = getNewPhotoStat();
 
 			const CONCURRENT_FLICKR_STATS = 5;
 			await runConcurrent(photosSnapshot.docs, async (photoDoc) => {
@@ -52,11 +51,7 @@ export const updateFlickrStats = functionsV2.onSchedule(
 				};
 
 				try {
-					const newPhotoStats: PhotoStat = {
-						views: 0,
-						faves: 0,
-						comments: 0,
-					};
+					const newPhotoStats = getNewPhotoStat();
 
 					const result = await retryWithBackoff(() =>
 						callFlickrAPI("flickr.photos.getInfo", { photo_id: photoId })
@@ -78,6 +73,13 @@ export const updateFlickrStats = functionsV2.onSchedule(
 					userStats.views += newPhotoStats.views;
 					userStats.faves += newPhotoStats.faves;
 					userStats.comments += newPhotoStats.comments;
+
+					minUserStats = getMinPhotoStat(minUserStats, newPhotoStats);
+					maxUserStats = getMaxPhotoStat(maxUserStats, newPhotoStats);
+
+					if (newPhotoStats.views < minUserStats.views) minUserStats.views = newPhotoStats.views;
+					if (newPhotoStats.faves < minUserStats.faves) minUserStats.faves = newPhotoStats.faves;
+					if (newPhotoStats.comments < minUserStats.comments) minUserStats.comments = newPhotoStats.comments;
 
 					if (isEmptyStat(yesterdayPhotoStats)) {
 						log(
@@ -137,6 +139,12 @@ export const updateFlickrStats = functionsV2.onSchedule(
 				totalViews: userStats.views,
 				totalFaves: userStats.faves,
 				totalComments: userStats.comments,
+				maxViews: maxUserStats.views,
+				maxFaves: maxUserStats.faves,
+				maxComments: maxUserStats.comments,
+				minViews: minUserStats.views,
+				minFaves: minUserStats.faves,
+				minComments: minUserStats.comments,
 			});
 		}
 
