@@ -13,7 +13,6 @@ import {
 import { useAuth } from "../../context/AuthContext";
 import { LoadingIcon, VerticalGauge } from "../../atoms";
 import Pie from "../../molecules/Pie";
-import { commaSeparateNumber } from "../../util/numbers";
 import usePhotoApis from "../../infra/photos";
 import { ApiInstance } from "../../types/apis";
 import notFoundImage from "../../assets/img/not_found.jpg";
@@ -65,42 +64,6 @@ export const PhotoDetails: React.FC = () => {
 
 					{!isLoading && photo && (
 						<Container>
-							{/* <Row>
-								<Col>
-									<Pie percentage={photo.interestRate} colour={"red"} />
-								</Col>
-								<Col>
-									<Container className="h-100 d-flex flex-column justify-content-around">
-										<Row>
-											<Col xs="6" lg="auto">
-												<i className="fas fa-eye"></i>
-												<span className="lg-12"> Views: </span>
-											</Col>
-											<Col xs="6" lg="auto" className="pl-0">
-												{commaSeparateNumber(photo.totalViews)}
-											</Col>
-										</Row>
-										<Row>
-											<Col xs="6" lg="auto">
-												<i className="ni ni-favourite-28"></i>
-												<span className="lg-12"> Faves: </span>
-											</Col>
-											<Col xs="6" lg="auto" className="pl-0">
-												{commaSeparateNumber(photo.totalFaves)}
-											</Col>
-										</Row>
-										<Row>
-											<Col xs="6" lg="auto">
-												<i className="ni ni-chat-round"></i>
-												<span className="lg-12"> Comments: </span>
-											</Col>
-											<Col xs="6" lg="auto" className="pl-0">
-												{commaSeparateNumber(photo.totalComments)}
-											</Col>
-										</Row>
-									</Container>
-								</Col>
-							</Row> */}
 							<Row>
 								<Container className="d-flex justify-content-center">
 									<Row className="w-100 align-items-center">
