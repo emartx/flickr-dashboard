@@ -16,15 +16,21 @@ import Pie from "../../molecules/Pie";
 import usePhotoApis from "../../infra/photos";
 import { ApiInstance } from "../../types/apis";
 import notFoundImage from "../../assets/img/not_found.jpg";
+import useUserApis from "../../infra/users";
+import { User } from "@flickr-dashboard/core/src/types";
 
 export const PhotoDetails: React.FC = () => {
 	const { getPhoto } = usePhotoApis();
+	const { getUserInfo } = useUserApis();
+
 	const { firebaseUser } = useAuth();
 	const { id } = useParams();
 
 	const { data: photo, isLoading } = useQuery(ApiInstance.GetPhoto, () =>
 		getPhoto(id, firebaseUser.uid)
 	);
+	const { data: user } = useQuery(ApiInstance.GetUser, () => getUserInfo(firebaseUser.uid));
+	const { minViews = 0, minFaves = 0, minComments = 0, maxViews = 1, maxFaves = 1, maxComments = 1 } = user as User;
 
 	return (
 		<Card className="shadow">
@@ -71,13 +77,13 @@ export const PhotoDetails: React.FC = () => {
 											<Pie percentage={photo.interestRate} colour={"red"} />
 										</Col>
 										<Col xs={6} md={3}>
-											<VerticalGauge min={0} max={100} mean={60} value={photo.totalViews} title="Views" icon="fas fa-eye" />
+											<VerticalGauge min={minViews} max={maxViews} mean={(minViews + maxViews) / 2} value={photo.totalViews} title="Views" icon="fas fa-eye" />
 										</Col>
 										<Col xs={6} md={3}>
-											<VerticalGauge min={0} max={100} mean={60} value={photo.totalFaves} title="Faves" icon="ni ni-favourite-28" />
+											<VerticalGauge min={minFaves} max={maxFaves} mean={(minFaves + maxFaves) / 2} value={photo.totalFaves} title="Faves" icon="ni ni-favourite-28" />
 										</Col>
 										<Col xs={6} md={3}>
-											<VerticalGauge min={0} max={100} mean={60} value={photo.totalComments} title="Comments" icon="ni ni-chat-round" />
+											<VerticalGauge min={minComments} max={maxComments} mean={(minComments + maxComments) / 2} value={photo.totalComments} title="Comments" icon="ni ni-chat-round" />
 										</Col>
 									</Row>
 								</Container>

@@ -14,6 +14,12 @@ export type UserPayload = FlickrUserPayload & {
 	totalViews: number,
 	totalFaves: number,
 	totalComments: number,
+  maxViews: number,
+	maxFaves: number,
+	maxComments: number,
+  minViews: number,
+	minFaves: number,
+	minComments: number,
 };
 
 export type FlickrUserPayload = {
