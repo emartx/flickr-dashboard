@@ -15,3 +15,68 @@
 .photo-thumbnail:hover div {
   color: grey !important;
 }
+
+.fixed-card-wrapper {
+  height: 150px;
+}
+.growable-card {
+  height: 150px;
+  transition: all 0.3s ease;
+  z-index: 1;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+.fixed-card-wrapper:hover .growable-card {
+  height: 210px;
+  z-index: 2;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+@media screen and (max-width: 1200px) {
+  .fixed-card-wrapper {
+    height: 205px;
+  }
+  .growable-card {
+    height: 205px;
+  }
+  .fixed-card-wrapper:hover .growable-card {
+    height: 270px;
+  }
+}
+
+@media screen and (max-width: 1024px) {
+  .fixed-card-wrapper {
+    height: 130px;
+  }
+  .growable-card {
+    height: 130px;
+  }
+  .fixed-card-wrapper:hover .growable-card {
+    height: 220px;
+  }
+  
+}
+
+@media screen and (max-width: 768px) {
+  .fixed-card-wrapper {
+    height: 150px;
+  }
+  .growable-card {
+    height: 150px;
+  }
+  .fixed-card-wrapper:hover .growable-card {
+    height: 250px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .fixed-card-wrapper {
+    height: 155px;
+  }
+  .growable-card {
+    height: 155px;
+  }
+  .fixed-card-wrapper:hover .growable-card {
+    height: 250px;
+  }
+}

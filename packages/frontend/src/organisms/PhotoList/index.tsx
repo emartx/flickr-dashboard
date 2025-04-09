@@ -90,16 +90,23 @@ export const PhotoList: React.FC = () => {
 							{photos?.map(
 								(photo) => (
 									<Col key={photo.id} className="py-2 text-center photo-thumbnail" xs="6" sm="4" md="4" lg="3" xl="2">
-										<img
-											src={`https://live.staticflickr.com/${photo.server}/${photo.id}_${photo.secret}_q.jpg`}
-											// src={`https://live.staticflickr.com/${photo.server}/${photo.id}_${photo.secret}_w.jpg`}
-											alt={photo.title}
-											onClick={() => navigate(`/user/photo/${photo.id}`)}
-											className="w-100"
-										/>
-										<ProgressBar progressValue={photo.interestRate} />
-
-										<SmallStats photo={photo} />
+										<div className="fixed-card-wrapper">
+											<Card className="growable-card">
+												<CardBody className="p-1">
+													<img
+														src={`https://live.staticflickr.com/${photo.server}/${photo.id}_${photo.secret}_q.jpg`}
+														// src={`https://live.staticflickr.com/${photo.server}/${photo.id}_${photo.secret}_w.jpg`}
+														alt={photo.title}
+														onClick={() => navigate(`/user/photo/${photo.id}`)}
+														className="w-100"
+													/>
+													<div className="p-2">
+														<ProgressBar progressValue={photo.interestRate} />
+														<SmallStats photo={photo} />
+													</div>
+												</CardBody>
+											</Card>
+										</div>
 									</Col>
 								)
 							)}
