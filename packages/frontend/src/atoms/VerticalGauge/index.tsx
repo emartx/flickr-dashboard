@@ -1,5 +1,6 @@
 import React from 'react';
 import { Card, CardBody, Label } from 'reactstrap';
+import { commaSeparateNumber } from '../../util/numbers';
 
 type VerticalGaugeProps = {
   title: string;
@@ -43,13 +44,13 @@ export const VerticalGauge: React.FC<VerticalGaugeProps> = ({ title, icon, min, 
             className='position-absolute bg-danger text-white rounded-circle text-center font-weight-bold'
             style={{
               top: `${valuePos - 6}px`,
-              left: '-8px',
-              width: '20px',
+              left: '-12px',
+              width: '30px',
               height: '20px',
               fontSize: '12px',
               lineHeight: '20px',
             }}
-            title={`Value: ${value}`}
+            title={`Value: ${commaSeparateNumber(value)}`}
           >
             {value}
           </div>
