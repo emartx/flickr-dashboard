@@ -11,7 +11,7 @@ type VerticalGaugeProps = {
 };
 
 export const VerticalGauge: React.FC<VerticalGaugeProps> = ({ title, icon, min, max, mean, value }) => {
-  const gaugeHeight = 300;
+  const gaugeHeight = Math.round(0.07 * window.innerWidth + 43);
 
   const getRelativePosition = (val: number) => {
     if (max === min) return 0;
