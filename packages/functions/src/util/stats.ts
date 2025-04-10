@@ -6,13 +6,13 @@ export const getNewPhotoStat = (): PhotoStat => ({
 	comments: 0,
 });
 
-export const getMinPhotoStat = (minPhotoStat: PhotoStat, newPhotoStat: PhotoStat): PhotoStat => ({
+export const updateMinPhotoStat = (minPhotoStat: PhotoStat, newPhotoStat: PhotoStat): PhotoStat => ({
   views: Math.min(minPhotoStat.views, newPhotoStat.views),
   faves: Math.min(minPhotoStat.faves, newPhotoStat.faves),
   comments: Math.min(minPhotoStat.comments, newPhotoStat.comments),
 });
 
-export const getMaxPhotoStat = (maxPhotoStat: PhotoStat, newPhotoStat: PhotoStat): PhotoStat => ({
+export const updateMaxPhotoStat = (maxPhotoStat: PhotoStat, newPhotoStat: PhotoStat): PhotoStat => ({
   views: Math.max(maxPhotoStat.views, newPhotoStat.views),
   faves: Math.max(maxPhotoStat.faves, newPhotoStat.faves),
   comments: Math.max(maxPhotoStat.comments, newPhotoStat.comments),

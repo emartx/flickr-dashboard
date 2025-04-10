@@ -3,7 +3,7 @@ import * as logger from "firebase-functions/logger";
 import { callFlickrAPI } from "../util/flickrUtils";
 import { db } from "..";
 import { PhotoStat } from "../util/types";
-import { getMaxPhotoStat, getMinPhotoStat, getNewPhotoStat } from "../util/stats";
+import { updateMaxPhotoStat, updateMinPhotoStat, getNewPhotoStat } from "../util/stats";
 import retryWithBackoff from "../util/retryWithBackoff";
 import runConcurrent from "../util/runConcurrent";
 import { calculateInterestRate, isEmptyStat } from "../util/calculateInterestRate";
@@ -74,8 +74,8 @@ export const updateFlickrStats = functionsV2.onSchedule(
 					userStats.faves += newPhotoStats.faves;
 					userStats.comments += newPhotoStats.comments;
 
-					minUserStats = getMinPhotoStat(minUserStats, newPhotoStats);
-					maxUserStats = getMaxPhotoStat(maxUserStats, newPhotoStats);
+					minUserStats = updateMinPhotoStat(minUserStats, newPhotoStats);
+					maxUserStats = updateMaxPhotoStat(maxUserStats, newPhotoStats);
 
 					if (newPhotoStats.views < minUserStats.views) minUserStats.views = newPhotoStats.views;
 					if (newPhotoStats.faves < minUserStats.faves) minUserStats.faves = newPhotoStats.faves;
@@ -146,6 +146,11 @@ export const updateFlickrStats = functionsV2.onSchedule(
 				minFaves: minUserStats.faves,
 				minComments: minUserStats.comments,
 			});
+
+			log(`Updated user stats for '${flickrUserName}' (${userId}):`);
+			log(`	-> Total Values (${userStats.views}, ${userStats.faves}, ${userStats.comments})`)
+			log(`	-> Max Values (${maxUserStats.views}, ${maxUserStats.faves}, ${maxUserStats.comments})`)
+			log(`	-> Min Values (${minUserStats.views}, ${minUserStats.faves}, ${minUserStats.comments})`)
 		}
 
 		log("Flickr Stats Fetcher Cron Job Completed.");
