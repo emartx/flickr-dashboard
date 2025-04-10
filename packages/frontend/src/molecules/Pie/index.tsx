@@ -31,15 +31,26 @@ const Circle: React.FC<CircleProps> = ({colour, pct}) => {
 
 const Text: React.FC<{percentage: number}> = ({percentage}) => {
   return (
-    <text
-      x="50%"
-      y="50%"
-      dominantBaseline="central"
-      textAnchor="middle"
-      fontSize={"1.5em"}
-    >
-      {percentage.toFixed(0)}%
+    <>
+      <text
+        x="50%"
+        y="50%"
+        dominantBaseline="central"
+        textAnchor="middle"
+        fontSize={"1.5em"}
+      >
+        {percentage.toFixed(0)}
+      </text>
+      <text
+        x="65%"
+        y="55%"
+        dominantBaseline="central"
+        textAnchor="middle"
+        fontSize={"1em"}
+      >
+      / K
     </text>
+  </>
   );
 };
 
