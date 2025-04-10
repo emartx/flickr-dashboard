@@ -7,7 +7,7 @@ export const calculateInterestRate = (views: number, faves: number, comments: nu
   if (views === 0) {
     return 0;
   }
-  const interestRate = ((faves * FAVES_WEIGHT + comments * COMMENTS_WEIGHT) / views) * 100;
+  const interestRate = ((faves * FAVES_WEIGHT + comments * COMMENTS_WEIGHT) / views) * 1000;
 
   return parseFloat(interestRate.toFixed(2));
 }
