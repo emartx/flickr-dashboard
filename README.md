@@ -67,7 +67,8 @@ flickr-dashboard/
 ├── firebase.json      # Firebase configuration
 ├── packages/          # Monorepo structure
 │   ├── frontend/      # Frontend application
-│   └── functions/     # Backend Firebase functions
+│   ├── functions/     # Backend Firebase functions
+│   └── core/          # Core types and helpers
 ├── tsconfig.json      # TypeScript configuration
 └── yarn.lock          # Dependency lockfile
 ```
