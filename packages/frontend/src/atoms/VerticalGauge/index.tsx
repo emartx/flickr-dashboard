@@ -23,8 +23,8 @@ export const VerticalGauge: React.FC<VerticalGaugeProps> = ({ title, icon, min, 
   const valuePos = gaugeHeight - getRelativePosition(value);
 
   return (
-    <Card style={{ width: '120px', margin: '1rem' }}>
-      <CardBody className='d-flex flex-column align-items-center'>
+    <Card className='w-100 h-100 m-0' style={{ maxWidth: '120px' }}>
+      <CardBody className='d-flex flex-column align-items-center p-0'>
         <Label>{max}</Label>
         <div className='position-relative bg-light my-2 mx-0' style={{ height: `${gaugeHeight}px`, width: '4px' }}>
           <div
@@ -34,7 +34,7 @@ export const VerticalGauge: React.FC<VerticalGaugeProps> = ({ title, icon, min, 
               left: '-8px',
               width: '20px',
               height: '1px',
-              // borderTop: '1px dashed #007bff',
+              borderStyle: 'dashed',
             }}
             title={`Mean: ${mean}`}
           ></div>
