@@ -1,83 +1,138 @@
-# Flickr Dashboard
+# 📸 Flickr Dashboard
 
-Flickr Dashboard is a web application that integrates with the Flickr API to provide users with personalized photo management and viewing experiences. This project is designed with a modern tech stack and is built for scalability and ease of use.
-
-## Features
-- **User Authentication**: Secure login/logout functionality using Google Authentication.
-- **Flickr API Integration**: Fetch and display user-specific photos and metadata.
-- **Firebase Functions**: Ensures security and confidentiality of API keys, while also fetching data securely from Flickr.
-- **Interest Rate Algorithm**: A custom algorithm calculates photo interest rates for better insights.
-- **Customizable Settings**: User preferences for managing their Flickr account.
-- **Responsive Design**: Optimized for both desktop and mobile devices.
+**Flickr Dashboard** is a responsive web application designed to give users an enhanced view and analysis of their Flickr photos. It integrates with the Flickr API and leverages modern tools to deliver a fast, efficient, and user-friendly experience.
 
 ---
 
-## Prerequisites
-Make sure you have the following tools installed on your system:
+## 🧱 Monorepo Architecture
 
-- [Node.js](https://nodejs.org/) (v16 or higher recommended)
-- [Yarn](https://yarnpkg.com/) (preferred over npm)
-- [Firebase CLI](https://firebase.google.com/docs/cli) for deploying backend functions
+This project is organized as a **monorepo** with multiple packages:
 
----
+- `core`: Shared TypeScript types and models used by both frontend and backend  
+- `frontend`: React-based web UI  
+- `functions`: Firebase Functions to handle server-side logic
 
-## Installation
-
-Follow these steps to set up and run the project locally:
-
-1. **Clone the Repository**:
-   ```bash
-   git clone https://github.com/your-repo/flickr-dashboard.git
-   cd flickr-dashboard
-   ```
-
-2. **Install Dependencies**:
-   Navigate to both the frontend and functions directories and install dependencies:
-   ```bash
-   yarn install
-   cd packages/frontend && yarn install
-   cd ../functions && yarn install
-   ```
-
-3. **Environment Setup**:
-   - Copy `.env.sample` to `.env` in the respective directories (`frontend` and `functions`).
-   - Update the environment variables with your API keys and Firebase configuration.
-
-4. **Run Firebase Functions Emulator**:
-   Navigate to the root directory and start the Firebase functions emulator:
-   ```bash
-   firebase emulators:start --only functions
-   ```
-
-5. **Run the Application**:
-   - Start the frontend:
-     ```bash
-     cd packages/frontend
-     yarn start
-     ```
+This setup allows **shared logic and types**, reducing duplication and improving type safety across the stack.
 
 ---
 
-## Project Structure
+## 🧩 Tech Stack
 
-```plaintext
-flickr-dashboard/
-├── LICENSE            # Licensing information
-├── README.md          # Documentation
-├── firebase.json      # Firebase configuration
-├── packages/          # Monorepo structure
-│   ├── frontend/      # Frontend application
-│   ├── functions/     # Backend Firebase functions
-│   └── core/          # Core types and helpers
-├── tsconfig.json      # TypeScript configuration
-└── yarn.lock          # Dependency lockfile
+| Area              | Technology                         |
+|-------------------|-------------------------------------|
+| Frontend          | React + TypeScript + Reactstrap     |
+| Naming Convention | Atomic Design pattern               |
+| Backend           | Firebase Functions (Node.js)        |
+| Database          | Firestore (NoSQL, nested data)      |
+| DevOps            | Docker + Firebase CLI               |
+| Scheduling        | Firebase Scheduled Functions (Cron) |
+| Cache System      | React Query (useQuery, useMutation) |
+| Performance       | Promise Pool + API response caching |
+| Reliability       | Retry logic on external API calls   |
+
+---
+
+## 📱 Features
+
+- Responsive design for desktop and mobile  
+- Google Authentication via Firebase  
+- Flickr API Integration to fetch photos and metadata  
+- Interest Rate algorithm to rank photos by actual attention  
+- Realtime caching using useQuery()  
+- Retry logic for API failures  
+- Scheduled background jobs  
+- Shared type system using a central core package
+
+---
+
+## 🔢 Interest Rate Formula
+
+Photos are ranked using a custom algorithm designed to reflect real user interest:
+
+```
+Interest Rate = (views ^ 0.5) + (favorites * 2) + (comments * 3)
 ```
 
-### Key Directories
-- **`frontend`**: Contains all source code for the React.js frontend.
-- **`functions`**: Houses the backend logic deployed as Firebase functions.
+This gives a fair ranking by factoring in views, favorites, and comments with weighted values.
 
 ---
+
+## 🔄 Async Execution & API Resilience
+
+- Uses Promise Pool to manage concurrent API calls  
+- Retry mechanism automatically re-attempts failed API requests  
+- Caching using React Query improves performance and responsiveness
+
+---
+
+## ⏱️ Cron Jobs (Scheduled Tasks)
+
+Scheduled tasks are implemented using Firebase Scheduled Functions, which:
+
+- Periodically fetch the latest photo data  
+- Recalculate interest rates for all photos  
+- Keep the dashboard metrics fresh and up-to-date
+
+---
+
+## 🗃️ Nested Data with Firestore (NoSQL)
+
+Firestore is used for storing nested and hierarchical data:
+
+```
+users/{userId}/photos/{photoId}
+```
+
+This allows efficient queries scoped per user and photo.
+
+---
+
+## 🎨 Theme & Design System
+
+- Built using Reactstrap  
+- Styling is clean and minimal, based on Bootstrap principles  
+- Component structure follows Atomic Design:
+
+```
+components/  
+├── atoms/  
+├── molecules/  
+├── organisms/  
+├── templates/  
+└── pages/
+```
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Node.js (v16 or newer)  
+- Yarn  
+- Firebase CLI
+
+### Installation
+
+```
+git clone https://github.com/your-username/flickr-dashboard.git  
+cd flickr-dashboard  
+yarn install
+```
+
+### Running the App
+
+```
+yarn start:fe
+```
+
+In case you need to run the backend on your local you can use this command:
+```
+yarn start:be
+```
+
+---
+
 
 ## Deployment on Firebase
 
@@ -94,54 +149,49 @@ To deploy the project on Firebase, follow these steps:
    ```
 
 3. **Build and Deploy Firebase Functions**:
-   Navigate to the functions directory and build the project:
+
+   Simply run this command, It navigates to the functions directory and builds the project before deploying it:
    ```bash
-   cd packages/functions
-   yarn build
-   ```
-   Then deploy the Firebase functions:
-   ```bash
-   yarn deploy
+   yarn deploy:be
    ```
 
 4. **Build and Deploy the Frontend**:
-   Navigate to the frontend directory and build the project:
+
+   Simply run this command, It navigates to the frontend directory and builds the project before deploying it:
    ```bash
-   cd packages/frontend
-   yarn build
-   ```
-   Then deploy the hosting:
-   ```bash
-   yarn deploy
+   yarn deploy:fe
    ```
 
 ---
 
-## How to Contribute
+## 🐳 Docker Support
 
-We welcome contributions! To get started:
+The project comes with Dockerfile and docker-compose.yml:
 
-1. Fork the repository.
-2. Create a new branch for your feature:
-   ```bash
-   git checkout -b feature-name
-   ```
-3. Commit your changes:
-   ```bash
-   git commit -m "Add feature-name"
-   ```
-4. Push to your branch:
-   ```bash
-   git push origin feature-name
-   ```
-5. Open a Pull Request on GitHub.
+```
+docker-compose up --build
+```
+
+This will spin up both frontend and backend services in isolated containers.
 
 ---
 
-## License
+## 📝 License
 
 This project is licensed under the [MIT License](./LICENSE).
 
 ---
 
-For questions or support, feel free to open an issue or reach out via the repository's discussion board.
+## 🙌 Contributing
+
+Feel free to fork the repo, open issues, or submit pull requests!
+
+---
+
+## 📬 Contact
+
+For questions, suggestions, or collaboration, feel free to reach out.
+
+Email: [Emad.Armoun@gmail.com](emad.armoun@gmail.com)
+
+Website: [EmArTx.net](https://www.emartx.net)
