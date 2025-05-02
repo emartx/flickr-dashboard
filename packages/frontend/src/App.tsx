@@ -13,6 +13,7 @@ import { PrivacyPolicyPage } from "./pages/PrivacyPolicy";
 import "./assets/plugins/nucleo/css/nucleo.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "./assets/scss/argon-dashboard-react.scss";
+import { LandingPage } from "./pages/LandingPage";
 
 const App: React.FC = () => {
 	const { isAuthenticated } = useAuth();
@@ -23,7 +24,17 @@ const App: React.FC = () => {
 				<Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
 				<Route path="/user/*" element={isAuthenticated ? <UserLayout /> : <Navigate to={"/auth/login"} />} />
 				<Route path="/auth/*" element={<AuthLayout />} />
-				<Route path="*" element={<Navigate to="/user/index" replace />} />
+				<Route
+					path="/"
+					element={
+						isAuthenticated ? (
+							<Navigate to="/user/index" replace />
+						) : (
+							<LandingPage />
+						)
+					}
+				/>
+				<Route path="*" element={<Navigate to="/" replace />} />
 			</Routes>
 		</Router>
 	);
