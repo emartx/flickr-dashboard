@@ -4,6 +4,8 @@
 
 **Flickr Dashboard** is a responsive web application designed to give users an enhanced view and analysis of their Flickr photos. It integrates with the Flickr API and leverages modern tools to deliver a fast, efficient, and user-friendly experience.
 
+![Desktop - List](screenshots/desktop_list.png)
+
 ---
 
 ## 🧱 Monorepo Architecture
