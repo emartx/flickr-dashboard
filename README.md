@@ -206,11 +206,11 @@ Website: [EmArTx.net](https://www.emartx.net)
 
 ### Desktop
 
-![Desktop - List](screenshots/desktop_list.png)
-![Desktop - Photo](screenshots/desktop_photo.png)
+<img src="screenshots/desktop_list.png" alt="Desktop - List" width="800" />
+<img src="screenshots/desktop_photo.png" alt="Desktop - Photo" width="800" />
 
 ### Mobile
 
-![Mobile - List](screenshots/mobile_list.png)
-![Mobile - Details](screenshots/mobile_details.png)
-![Mobile - Statistics](screenshots/mobile_statistics.png)
+<img src="screenshots/mobile_list.png" alt="Mobile - List" width="220" />
+<img src="screenshots/mobile_details.png" alt="Mobile - Details" width="220" />
+<img src="screenshots/mobile_statistics.png" alt="Mobile - Statistics" width="220" />
