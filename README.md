@@ -1,3 +1,5 @@
+<img alt="Flickr Dashboard Logo" align="right" src="https://github.com/emartx/flickr-dashboard/blob/main/packages/frontend/src/assets/img/brand/wide_logo.png?raw=true" width="21%" />
+
 # 📸 Flickr Dashboard
 
 **Flickr Dashboard** is a responsive web application designed to give users an enhanced view and analysis of their Flickr photos. It integrates with the Flickr API and leverages modern tools to deliver a fast, efficient, and user-friendly experience.
