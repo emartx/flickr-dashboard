@@ -1,4 +1,4 @@
-<img alt="Flickr Dashboard Logo" align="right" src="https://github.com/emartx/flickr-dashboard/blob/main/packages/frontend/src/assets/img/brand/wide_logo.png?raw=true" width="21%" />
+<img alt="Flickr Dashboard Logo" align="right" src="https://github.com/emartx/flickr-dashboard/blob/main/packages/frontend/src/assets/img/brand/wide_logo.png?raw=true" width="20%" />
 
 # 📸 Flickr Dashboard
 
@@ -199,3 +199,18 @@ For questions, suggestions, or collaboration, feel free to reach out.
 Email: [Emad.Armoun@gmail.com](emad.armoun@gmail.com)
 
 Website: [EmArTx.net](https://www.emartx.net)
+
+---
+
+## 📷 Screenshots
+
+### Desktop
+
+![Desktop - List](screenshots/desktop_list.png)
+![Desktop - Photo](screenshots/desktop_photo.png)
+
+### Mobile
+
+![Mobile - List](screenshots/mobile_list.png)
+![Mobile - Details](screenshots/mobile_details.png)
+![Mobile - Statistics](screenshots/mobile_statistics.png)
